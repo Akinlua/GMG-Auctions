@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" id="content">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GMG Auctions :: <%= title %></title>
+    <link rel="stylesheet" href="../../assets/vendors/animate.css/animate.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/slick-carousel/slick.css">
+    <link rel="stylesheet" href="../../assets/vendors/slick-carousel/slick-theme.css">
+    <link rel="stylesheet" href="../../assets/vendors/fancybox/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <script src="../../assets/vendors/jquery/jquery.min.js"></script>
+    <script src="../../assets/js/loader.js"></script>    
+
+    <!-- <script src="https://js.stripe.com/v3/"></script> -->
+
+    <script>
+        var stripePublickey = '<%= stripePublickey%>'
+    </script>
+
+    <!-- facebook -->
+    <meta property="og:title" content="<%= title %>">
+    <meta property="og:description" content="<%= description %>">
+    <meta property="og:image" content="<%= image_url %>">
+
+    <!-- twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= title %>">
+    <meta name="twitter:description" content="<%= description %>">
+    <meta name="twitter:image" content="<%= image_url %>">
+
+    <!-- whatsapp -->
+    <meta name="description" content="<%= description %>">
+
+</head>
+
+<body>
+    <div class="oleez-loader"></div>
+    <header class="oleez-header">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="navbar-brand" href="/"><img src="../../assets/images/Logo_2.svg" alt="Oleez"></a>
+            <ul class="nav nav-actions d-lg-none ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#!" data-toggle="searchModal">
+                        <img src="../../assets/images/search.svg" alt="search">
+                    </a>
+                </li>
+                <li class="nav-item dropdown d-none d-sm-block">
+                    <% if (is_user == false) { %>
+                        <a class="nav-link dropdown-toggle" href="/login" id="languageDropdown" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">LOGIN</a>
+                    <% } else { %>
+                        <a class="nav-link dropdown-toggle" href="/logout" id="languageDropdown" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">LOGOUT</a>
+                    <% } %>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#!" data-toggle="offCanvasMenu">
+                        <img src="../../assets/images/social icon@2x.svg" alt="social-nav-toggle">
+                    </a>
+                </li>
+            </ul>
+            <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#oleezMainNav"
+                aria-controls="oleezMainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="oleezMainNav">
+                <ul class="navbar-nav mx-auto mt-2 mt-lg-0">
+                    <% var activity1, activity2, activity3, activity4, activity5 = ''  %>
+                    <% if (title == 'Home') { %>
+                     <% var activity1 = 'active' %>
+                    <% } %>
+                    <li class="nav-item <%= activity1 %>">
+                        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <% if (title == 'About') { %>
+                        <% var activity2 = 'active' %>
+                    <% } %>
+                    <li class="nav-item <%= activity2 %>">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <% if (title == 'Items') { %>
+                        <% var activity3 = 'active' %>
+                    <% } %>
+                    <li class="nav-item <%= activity3 %>">
+                        <a class="nav-link" href="/items">Items</a>
+                    </li>
+                    <% if (title == 'Dashboard') { %>
+                        <% var activit4 = 'active' %>
+                    <% } %>
+                    <% if (is_user == true) { %>
+                        <% if (is_admin == false) { %>
+                            <li class="nav-item <%= activit4 %>">
+                                <a class="nav-link" href="/user-items">Dashboard</a>
+                            </li>
+                        <% } %>
+                    <% } %>
+                    <% if (title == 'Admin') { %>
+                        <% var activity5 = 'active' %>
+                    <% } %>
+                    <% if (is_admin == true) { %>
+                        <li class="nav-item <%= activity5 %>">
+                            <a class="nav-link" href="/admin">Admin</a>
+                        </li>
+                    <% } %>
+                </ul>
+                <ul class="navbar-nav d-none d-lg-flex">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-btn" href="#!" data-toggle="searchModal">
+                            <img src="../../assets/images/search.svg" alt="search">
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <% if (is_user == false) { %>
+                            <a class="nav-link" href="/login">LOGIN</a>
+                        <% } else { %>
+                            <a class="nav-link" href="/logout" >LOGOUT</a>
+                        <% } %>
+                    </li>
+                    <li class="nav-item ml-5">
+                        <a class="nav-link pr-0 nav-link-btn" href="#!" data-toggle="offCanvasMenu">
+                            <img src="../../assets/images/social icon@2x.svg" alt="social-nav-toggle">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+
+    <%- body %>
+
+
+
+<footer class="oleez-footer wow fadeInUp">
+    <div class="container">
+        <div class="footer-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="../../assets/images/Logo_1.svg" alt="oleez" class="footer-logo">
+                    <p class="footer-intro-text">Don't be shy, get in touch with us and create the world again!</p>
+                    <nav class="footer-social-links">
+                        <a href="#!">Fb</a>
+                        <a href="#!">Tw</a>
+                        <a href="#!">In</a>
+                        <a href="#!">Be</a>
+                    </nav>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-6 footer-widget-text">
+                            <h6 class="widget-title">PHONE</h6>
+                            <p class="widget-content">+80 (0)5 12 34 95 89</p>
+                        </div>
+                        <div class="col-md-6 footer-widget-text">
+                            <h6 class="widget-title">ENQUIRUES</h6>
+                            <p class="widget-content">info@oleez.site</p>
+                        </div>
+                        <div class="col-md-6 footer-widget-text">
+                            <h6 class="widget-title">ADDRESS</h6>
+                            <p class="widget-content">33 rue Burdeau 69089 <br> Paris France</p>
+                        </div>
+                        <div class="col-md-6 footer-widget-text">
+                            <h6 class="widget-title">WORK HOURS</h6>
+                            <p class="widget-content">Weekdays: 09:00 - 18:00 <br> Weekends: 11:00 - 17:00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-text">
+            <p class="mb-md-0">©  2020, oleez Theme. Made with passion by <a href="https://www.bootstrapdash.com" target="_blank" rel="noopener noreferrer" class="text-reset">BootstrapDash</a>.</p>
+            <p class="mb-0">All right reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Modals -->
+<!-- Off canvas social menu -->
+<nav id="offCanvasMenu" class="off-canvas-menu">
+    <button type="button" class="close" aria-label="Close" data-dismiss="offCanvasMenu">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <ul class="oleez-social-menu">
+        <li>
+            <a href="#!" class="oleez-social-menu-link">Facebook</a>
+        </li>
+        <li>
+            <a href="#!" class="oleez-social-menu-link">Instagram</a>
+        </li>
+        <li>
+            <a href="#!" class="oleez-social-menu-link">Behance</a>
+        </li>
+        <li>
+            <a href="#!" class="oleez-social-menu-link">Dribbble</a>
+        </li>
+        <li>
+            <a href="#!" class="oleez-social-menu-link">Email</a>
+        </li>
+    </ul>
+</nav>
+<!-- Full screen search box -->
+<div id="searchModal" class="search-modal">
+    <button type="button" class="close" aria-label="Close" data-dismiss="searchModal">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <form action="/search" method="post" class="oleez-overlay-search-form">
+        <label for="search" class="sr-only">Search</label>
+        <input type="search" class="oleez-overlay-search-input" id="search" name="search" placeholder="Search for Item by name, cost, Bid price...">
+    </form>
+</div>
+<script src="../../assets/vendors/popper.js/popper.min.js"></script>
+<script src="../../assets/vendors/wowjs/wow.min.js"></script>
+<script src="../../assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../../assets/vendors/slick-carousel/slick.min.js"></script>
+<script src="../../assets/js/main.js"></script>
+<script src="../../assets/js/landing.js"></script>
+<script>
+    new WOW({mobile: false}).init();
+</script>
+</body>
+
+
+</html>

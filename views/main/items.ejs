@@ -1,0 +1,81 @@
+
+    <main class="shop-page">
+        <div class="container">
+            <div class="page-header wow fadeInUp">
+                <% if (search) { %>
+                    <h2 class="page-title">Search result for Item "<%= search %>"</h2>
+                <% } else { %>
+                    <h2 class="page-title">Items on Auction</h2>
+                <% } %>
+                <p class="result-count">Showing 
+                    <% if (startPoint == endPoint) { %>
+                        <%= startPoint %>
+                    <% } else { %>
+                        <%= startPoint %>–<%= endPoint %>
+                    <% } %> of <%= count %> results</p>
+            </div>
+            <div class="row">
+                <% if (AllItems.length > 0) { %>
+
+                    <% AllItems.forEach(item => { %>
+                    
+                    <div class="col-md-4 product-card wow fadeInUp">
+                        <div class="product-thumbnail-wrapper">
+                            <img src="<%= item.pic_path %>" alt="product" class="product-thumbnail">
+                        </div>
+                        <h5 class="product-title"><%= item.name %></h5>
+                        <p class="product-price">
+                            <% if (item.Bid_price) { %>
+                                £<%= item.Bid_price %><del>£<%= item.cost %></del>
+                            <% } else { %>
+                                £<%= item.cost %>
+                            <% } %>
+                        </p>
+                        <div class="btn-wrapper"><a href="/item/<%= item._id %>" class="btn btn-add-to-cart">View to Bid</a></div>
+                    </div>
+                    
+                    <% }) %>
+
+                <% } else { %>
+                    <h2>No Item Found</h2>
+                <% } %>
+
+
+            </div>
+
+            <% if (noOfPages > 1) { %>
+            <div class="row">
+                <div class="col-12 pb-5 mb-5">
+                        <nav class="oleez-pagination d-flex align-items-center justify-content-center wow fadeInUp">
+                            <% if (hasPrevPage == true) { %>
+                                <a href="/items?page=<%= prevPage %>&search=<%= search %>" class="previous">&larr;</a>
+                            <% } %>
+                            <% for( let i = 0; i < noOfPages; i++ ) { %>
+                                <% if (page == i +1) { %>
+                                    <a href="/items?page=<%= i + 1 %>&search=<%= search %>" class="active">
+                                        <% if (i+1 <= 9) { %>
+                                            0<%= i + 1 %>
+                                        <% } else {%>
+                                            <%= i + 1 %>
+                                        <% } %>
+                                    </a>  
+                                <% } else { %>
+                                    <a href="/items?page=<%= i + 1 %>&search=<%= search %>">
+                                        <% if (i+1 <= 9) { %>
+                                            0<%= i + 1 %>
+                                        <% } else {%>
+                                            <%= i + 1 %>
+                                        <% } %>
+                                    </a>
+                                <% } %>
+                            <% } %>
+                            <% if (hasNextPage == true) { %>
+                                <a href="/items?page=<%= nextPage %>&search=<%= search %>" class="next">&rarr;</a>
+                            <% } %>
+                        </nav>
+                </div>
+            </div>
+            <% } %>
+
+        </div>
+    </main>

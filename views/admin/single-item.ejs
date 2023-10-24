@@ -1,0 +1,175 @@
+
+
+<div class="main-panel">
+    <div class="content-wrapper">
+
+      <p style="color: green;"><%= message %></p>
+      <div class="row">
+        <div class="col-xl-6 grid-margin stretch-card flex-column">
+            <h5 class="mb-2 text-titlecase mb-4"><%= item.name %></h5>
+            <div class="row h-100">
+              <div class="col-md-12 stretch-card">
+                <div class="card">
+                   <img src="<%= item.pic_path %>" alt="gallery item">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <div class="col-xl-6 grid-margin stretch-card flex-column">
+            <div class="sidebar-widget wow fadeInUp">
+                <h5 class="widget-title">Gallery</h5>
+                <div class="widget-content">
+                    <div class="gallery">
+                        <% item.gallery_paths.forEach(path => { %>
+                            <a href="<%= path %>" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                <img src="<%= path %>" alt="gallery item">
+                            </a>
+                        <% }) %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+      </div>
+
+        <div class="row">
+              <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Description</h4>
+                    <p>
+                      <%= item.description %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 grid-margin stretch-card" id="setDate">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Set Auction Date</h4>
+                    <p class="card-description">
+                      Set the date for when the auction of the item <%=  %> will take place
+                    </p>
+                    <div class="form-group">
+                        <form action="/admin/set-date/<%= item._id %>?_method=PATCH" method="POST">
+                            <div class="input-group">                            
+                                <input type="date" class="form-control" placeholder="Recipient's username" name="date" aria-label="Recipient's username" required>
+                                <div class="input-group-append">                        
+                                    <button class="btn btn-sm btn-primary" type="submit">Set</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+      </div>
+      
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="table-responsive pt-3">
+              <table class="table table-striped project-orders-table">
+                <thead>
+                  <tr>
+                    <th class="ml-5">Owner</th>
+                    <th>Initial Cost</th>
+                    <th>Bid Price</th>
+                    <th>Status</th>
+                    <th>Paid</th>
+                    <th>Sold</th>
+                    <th>Breached</th>
+                    <th>Auction Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><%= item.owner %></td>
+                    <td>£<%= item.cost %> </td>
+                    <% if (item.Bid_price) { %>
+                        <td>£<%= item.Bid_price %></td>
+                    <% }else { %>
+                        <td>Nil</td>
+                    <% } %>
+                    <td><%= item.status %></td>
+                    <td><%= item.paid %></td>
+                    <td><%= item.sold %></td>
+                    <td><%= item.breached %></td>
+                    <% if (item.auctionDate) { %>
+                        <td><%= item.auctionDate %></td>
+                    <% } else { %>
+                        <td>
+                            <a href="/admin/item/<%= item._id %>#setDate" type="button" class="btn btn-success btn-sm btn-icon-text mr-3">
+                                Set date
+                                <i class="typcn typcn-edit btn-icon-append"></i>                          
+                            </a>
+                        </td>
+                    <% } %>
+                    <td>
+                      <div class="d-flex align-items-center">  
+                          <form action="/admin/accept-item/<%= item._id %>" method="post">
+                            <button type="submit" class="btn btn-success btn-sm btn-icon-text mr-3">
+                              Accept
+                              <i class="typcn typcn-edit btn-icon-append"></i>                          
+                            </button>
+                          </form>    
+                          <form action="/admin/reject-item/<%= item._id %>" method="post">
+                            <button type="submit" class="btn btn-danger btn-sm btn-icon-text mr-3">
+                              Reject
+                              <i class="typcn typcn-delete-outline btn-icon-append"></i>                          
+                            </button>
+                          </form>   
+                        <% if (item.breached == false) { %>
+                          <form action="/admin/breached-item/<%= item._id %>" method="post">
+                            <button type="submit" class="btn btn-danger btn-sm btn-icon-text mr-3">
+                              Breached
+                              <i class="typcn typcn-delete-outline btn-icon-append"></i>                          
+                            </button>
+                          </form>                          
+                        <% } %>
+                        <% if (item.breached == false) { %>
+                          <form action="/admin/delete-item/<%= item._id %>" method="post">
+                            <button type="submit" class="btn btn-danger btn-sm btn-icon-text">
+                              Delete
+                              <i class="typcn typcn-delete-outline btn-icon-append"></i>                          
+                            </button>
+                          </form>                          
+                        <% } %>
+                        
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- content-wrapper ends -->
+    <!-- partial:partials/_footer.html -->
+    <footer class="footer">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                    <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023. All rights reserved.</span>
+                </div>
+            </div>    
+        </div>        
+    </footer>
+    <!-- partial -->
+  </div>
+
+  
+<script src="../../assets/vendors/popper.js/popper.min.js"></script>
+<script src="../../assets/vendors/wowjs/wow.min.js"></script>
+<script src="../../assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../../assets/vendors/fancybox/jquery.fancybox.min.js"></script>
+<script src="../../assets/js/main.js"></script>
+<script>
+    new WOW().init();
+</script>

@@ -1,0 +1,40 @@
+
+
+<main class="portfolio-masonry-page">
+    <div class="container">
+        <h1 class="oleez-page-title wow fadeInUp"><%= item.name %>'s Gallery</h1>
+        <div class="grid clearfix" style="margin-bottom: 80px;">
+            <div class="grid-sizer"></div>
+            <% if (item.gallery_paths.length > 0) { %>
+             
+                <% item.gallery_paths.forEach(path => { %>
+                    <a href="<%= path %>" class="grid-item wow fadeInUp" data-fancybox="masonry-gallery">
+                        <img src="<%= path %>" alt="grid item">
+                    </a>
+                <% }) %>
+
+            <% } else { %>
+                <h2>There are no images in <%= item.name %>'s Gallery</h2>
+            <% } %>
+
+        </div>
+    </div>
+</main>
+
+<script src="../../assets/vendors/popper.js/popper.min.js"></script>
+    <script src="../../assets/vendors/wowjs/wow.min.js"></script>
+    <script src="../../assets/vendors/masonry-layout/masonry.pkgd.min.js"></script>
+    <script src="../../assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/vendors/fancybox/jquery.fancybox.min.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    <script>
+        new WOW().init();
+
+        $('.grid').masonry({
+            // options...
+            itemSelector: '.grid-item',
+            columnWidth: '.grid-sizer',
+            gutter: 25,
+            percentPosition: true
+        });
+</script>

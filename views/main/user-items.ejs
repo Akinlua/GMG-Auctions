@@ -1,0 +1,66 @@
+<main class="portfolio-list">
+    <div class="container">
+        <h3 style="color: green;"><%= message %></h3>
+        <h1 class="oleez-page-title wow fadeInUp">DashBoard: Items Posted</h1>
+
+        <% if (AllItems_user.length > 0) { %>
+         
+        <% AllItems_user.forEach(item => { %>
+         
+        <article class="project">
+            <div class="row">
+                <div class="col-md-4 mb-5 md-mb-0 project-content wow fadeInLeft">
+                    <h2 class="project-title"><%= item.name %></h2>
+                    <p>Initial Cost: £<%= item.cost %> | Biding Price: 
+                        <% if (item.Bid_price) { %>
+                            £<%= item.Bid_price %>  
+                        <% } else { %>
+                            No Biding Yet
+                        <% } %>
+                    </p>
+                    <p>Status: <%= item.status %>
+                    </p>
+                    <% if (item.breached) { %>
+                        <p style="color: red;">Breached: Your Item is flagged as breached</p>
+                    <% } %>
+                    <p>Auction Date:
+                        <% if (item.auctionDate) { %>
+                            <%= item.auctionDate %>
+                        <% } else { %>
+                            Waiting to be set...
+                        <% } %>
+                    </p>
+                    <% if (item.sold == true) { %>
+                        <p style="color: green;">Sold &#10003;</p>
+                    <% } else {%>
+                        <p style="color: red;">Sold &#10007;</p>
+                    <% } %>
+                    <% if (item.paid == true) { %>
+                        <p style="color: green;"><a style="color: green;" href="<%= item.receipturl %>">Paid &#10003;</a></p>
+                    <% } else { %>
+                        <p style="color: red;"><a href="/pay/<%= item._id %>" style="color: red;">Payment &#10007;</a></p>
+                    <% } %>
+                    <% if (item.status != 'Approved') { %>
+                    <a href="/editItem/<%= item._id %>" class="project-link">Edit Item</a>                     
+                    <% } %>
+                </div>
+                <div class="col-md-7 wow fadeInRight">
+                    <div class="project-thumbnail-wrapper">
+                        <img src="<%= item.pic_path %>" alt="project">
+                    </div>
+                    <p><a style="padding: 17px 50px; background-color: #131212; border-radius: 0; color: #ffffff; font-size: 18px; font-weight: 700; margin-bottom: 30px; margin-top: 30px;" class=" btn btn-submit" href="/item/<%= item._id %>">View</a> 
+                    </p>
+                </div>
+            </div>
+        </article>
+        <% }) %>
+
+        <% } else { %>
+            <h2>No Item Have been Posted. You can Auction your items by clicking on post new item and post details about your item</h2>
+        <% } %>
+
+
+        <a style="padding: 17px 50px; background-color: #131212; border-radius: 0; color: #ffffff; font-size: 18px; font-weight: 700; margin-bottom: 30px; margin-top: 30px;" class=" btn btn-submit" href="/post-item">Post New Item</a>
+        
+    </div>
+</main>

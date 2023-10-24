@@ -1,0 +1,140 @@
+
+
+<main class="blog-post-single">
+    <div class="container">
+        <h1 class="post-title wow fadeInUp"><%= item.name %></h1>
+        <div class="row">
+            <div class="col-md-8 blog-post-wrapper">
+                <div class="post-header wow fadeInUp">
+                    <img src="<%= item.pic_path %>" alt="blog post" class="post-featured-image">
+                    <p class="post-date">By <%= item.owner %></p>
+                </div>
+                <div class="post-content wow fadeInUp">
+                    <h4>Biding Date: 
+                        <% if (item.sold == true) { %>
+                            SOLD
+                        <% }  else { %>
+                            <% if (item.auctionDate) { %>
+                                <%= item.auctionDate %> | Current Bid Price: £<%= item.Bid_price %> 
+                            <% } else { %>
+                                Starting Soon | Current Price: £<%= item.cost %> 
+                            <% } %>
+                        <% } %>
+                    </h4>
+                        
+                    <pre style="font-family: inherit; font-size: inherit;"><%= item.description %></pre>
+                    <% if (item.sold == false) { %>
+                        <blockquote class="blockquote wow fadeInUp">
+                            <p>To Take part of the auction by biding, click on the link here - <a href="#" style="color: #f7b500; text-decoration: none;">Bid</a>.</p>
+                        </blockquote>
+                    <% } %>
+                </div>
+                <div class="post-tags wow fadeInUp">
+                  
+                </div>
+
+
+                <!-- COmments -->
+                <div class="post-header">
+                    <h2 style="margin-bottom: 30px;" id="comment">Comments</h2>
+                </div>
+                <% if (comments.length>0) { %>
+                    <% comments.forEach(comment => { %>
+                        <div class="post-content wow fadeInUp">
+                            <h4><%= comment.owner %></h4>                        
+                            <h6><%= comment.message %> <small> <%= comment.date %></small></h6>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p>Be first to comment</p>
+                <% } %>
+                <% if (count > limit) { %>
+                    <% var new_limit = limit + 5 %>
+                    <a href="/item/<%= item._id %>?limit=<%= new_limit %>">View more</a>
+                <% } %>
+                <div class="post-tags wow fadeInUp">
+                  
+                </div>
+                <!-- end comments -->
+               
+                <div class="comment-section wow fadeInUp">
+                    <p style="color: red;"> <%= error %></p>
+                    <h5 class="section-title">Leave a Reply</h5>
+                    <form action="/post-comment/<%= item._id %>" method="post" class="oleez-comment-form" >
+                        <div class="row">
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-12">
+                                <label for="message">*Message</label>
+                                <textarea name="message" id="message" rows="10" class="oleez-textarea" maxlength="1500" required></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-submit">Send</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="sidebar-widget wow fadeInUp">
+                    <h5 class="widget-title">Share</h5>
+                    <div class="widget-content">
+                        <nav class="social-links">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=<%- encodeURIComponent(item_url) %>" target="_blank">Fb</a>
+                            <a href="https://twitter.com/intent/tweet?url=<%- encodeURIComponent(item_url) %>" target="_blank">Tw</a>
+                            <a href="https://wa.me/?text=<%- encodeURIComponent(item_url) %>" target="_blank">Wa</a>
+                        </nav>
+                    </div>
+                </div>
+                <div class="sidebar-widget wow fadeInUp">
+                    <h5 class="widget-title">Gallery</h5>
+                    <div class="widget-content">
+                        <div class="gallery">
+                            <% if (item.gallery_paths.length > 0) { %>
+                                <% item.gallery_paths.forEach(path => { %>
+                             
+                                <a href="<%= path %>" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                    <img src="<%= path %>" alt="gallery item">
+                                </a>
+                                <% }) %>
+                            <% } else { %>
+                                    <p>No Images Found</p>
+                            <% } %>
+                            
+                        </div>
+                    </div>
+                    <a href="/item-gallery/<%= item._id %>" style="color: black; text-decoration: none;">View in Full size</a>
+
+                </div>
+                <div class="sidebar-widget wow fadeInUp">
+                    <h5 class="widget-title">Other Items by <%= item.owner %></h5>
+                    <div class="widget-content">
+                        <ul class="category-list">
+                            <% if (OtherItems.length > 0) { %>
+                             
+                                <% OtherItems.forEach(item => { %>
+                                    <li><a href="/item/<%= item._id %>"><%= item.name %></a></li>
+                                <% }) %>
+                            <% } else { %>
+                                <li>No other items</li>
+                            <% } %>
+                            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<script src="../../assets/vendors/popper.js/popper.min.js"></script>
+    <script src="../../assets/vendors/wowjs/wow.min.js"></script>
+    <script src="../../assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/vendors/fancybox/jquery.fancybox.min.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    <script>
+        new WOW().init();
+</script>
