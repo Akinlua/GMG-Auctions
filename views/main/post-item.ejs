@@ -55,33 +55,33 @@
 <body>
     <main class="contact-page">
         <div class="container">
-            <h1 class="oleez-page-title wow fadeInUp">Post Your Item for Auctioning</h1>
+            <h1 class="gmg-page-title wow fadeInUp">Post Your Item for Auctioning</h1>
             <div class="row">
                 <div class="col-md-9 pl-lg-5 wow fadeInRight">
                     <p style="color: red;"><%= error %></p>
-                    <form action="/createItem" method="post"  id="payment-form" enctype="multipart/form-data" class="oleez-contact-form">
+                    <form action="/createItem" method="post"  id="payment-form" enctype="multipart/form-data" class="gmg-contact-form">
                         <div class="form-group">
                             <p>Max character: 500</p>
-                            <input type="text" class="oleez-input" id="fullName" name="name" required>
+                            <input type="text" class="gmg-input" id="fullName" name="name" required>
                             <label for="fullName">*Name of Item</label>
                         </div>
                         <div class="form-group">
                             <p>Price is in pounds</p>
-                            <input type="number" class="oleez-input" id="fullName" name="cost" required>
+                            <input type="number" class="gmg-input" id="fullName" name="cost" required>
                             <label for="email">*Starting Price</label>
                         </div>
                         <div class="form-group">
                             <label for="email">*Select An Image (5MB limit)</label>
-                            <input type="file" id="fileInput" name="file"  rows="10" class="oleez-textarea" required>
+                            <input type="file" id="fileInput" name="file"  rows="10" class="gmg-textarea" required>
                         </div>
                         <div class="form-group">
                             <label for="email">Select other images for gallery (5MB limit)</label>
-                            <input type="file" id="fileInputs" name="imagesArray"  rows="10" class="oleez-textarea" multiple>
+                            <input type="file" id="fileInputs" name="imagesArray"  rows="10" class="gmg-textarea" multiple>
                         </div>
                         <div class="form-group">
                             <p>Max character: 2500</p>
                             <label for="message">*Description / full details on the item</label>
-                            <textarea contenteditable="true" name="description" id="message" rows="10" class="oleez-textarea" required></textarea>
+                            <textarea contenteditable="true" name="description" id="message" rows="10" class="gmg-textarea" required></textarea>
                         </div>
                         <p>Fill in your Card details: This is only for creating hold on your account. Read the terms and Conditions.</p>
                         <div   style="margin-bottom: 20px;" id="card-element" class="form-input">

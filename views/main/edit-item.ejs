@@ -1,28 +1,28 @@
 <main class="contact-page">
     <div class="container">
-        <h1 class="oleez-page-title wow fadeInUp">Edit <%= item.name %>'s' Item for Auctioning</h1>
+        <h1 class="gmg-page-title wow fadeInUp">Edit <%= item.name %>'s' Item for Auctioning</h1>
         <div class="row">
             <div class="col-md-9 pl-lg-5 wow fadeInRight">
                 <p style="color: red;"><%= error %></p>
-                <form action="/editItem/<%= item.id %>?_method=PATCH" method="post" enctype="multipart/form-data" class="oleez-contact-form">
+                <form action="/editItem/<%= item.id %>?_method=PATCH" method="post" enctype="multipart/form-data" class="gmg-contact-form">
                     <div class="form-group">
                         <p>Max character: 500</p>
-                        <input type="text" class="oleez-input" id="fullName" name="name" value="<%= item.name %>" required>
+                        <input type="text" class="gmg-input" id="fullName" name="name" value="<%= item.name %>" required>
                         <label for="fullName">*Name of Item</label>
                     </div>
                     <div class="form-group">
                         <p>Price is in pounds</p>
-                        <input type="number" class="oleez-input" id="fullName" name="cost" value="<%= item.cost %>" required>
+                        <input type="number" class="gmg-input" id="fullName" name="cost" value="<%= item.cost %>" required>
                         <label for="email">*Starting Price</label>
                     </div>
                     <div class="form-group">
                         <label for="email">Select An Image (5MB limit)</label>
-                        <input type="file" id="fileInput" name="file" rows="10" class="oleez-textarea">
+                        <input type="file" id="fileInput" name="file" rows="10" class="gmg-textarea">
                         <input type="text" disabled placeholder="Selected Image: <%= item.pic_originalname %>" style="width: 500px;">
                     </div>
                     <div class="form-group">
                         <label for="email">Select other images for gallery (5MB limit)</label>
-                        <input type="file" id="fileInputs" name="imagesArray"  rows="10" class="oleez-textarea" multiple>
+                        <input type="file" id="fileInputs" name="imagesArray"  rows="10" class="gmg-textarea" multiple>
                         <input type="text" style="width: 700px;"  disabled placeholder="Selected Images: <% if (item.gallery_originalnames.length == 0) { %>None<% } else {%><%= item.gallery_originalnames[0] %><% if (item.gallery_originalnames.length > 1) { %>  +<%= item.gallery_originalnames.length-1 %> file(s)"<% } %><% } %>
                         
                         
@@ -35,7 +35,7 @@
                     <div class="form-group">
                         <p>Max character: 2500</p>
                         <label for="message">*Description / full details on the item</label>
-                        <textarea name="description" contenteditable="true"  id="message" rows="10" class="oleez-textarea" required><%= item.description %></textarea>
+                        <textarea name="description" contenteditable="true"  id="message" rows="10" class="gmg-textarea" required><%= item.description %></textarea>
                     </div>
                     <div class="form-group">
                         <input type="checkbox" name="checkBox" checked required> <a href="#">Agree to all terms & Conditions</a>

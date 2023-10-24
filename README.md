@@ -1,1 +1,1 @@
-# GMG-Auctions
+# gmg--Auctions
