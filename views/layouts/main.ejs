@@ -48,13 +48,11 @@
                         <img src="../../assets/images/search.svg" alt="search">
                     </a>
                 </li>
-                <li class="nav-item dropdown d-none d-sm-block">
+                <li class="nav-item">
                     <% if (is_user == false) { %>
-                        <a class="nav-link dropdown-toggle" href="/login" id="languageDropdown" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">LOGIN</a>
+                        <a class="nav-link" href="/login">LOGIN</a>
                     <% } else { %>
-                        <a class="nav-link dropdown-toggle" href="/logout" id="languageDropdown" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">LOGOUT</a>
+                        <a class="nav-link" href="/logout">LOGOUT</a>
                     <% } %>
                 </li>
                 <li class="nav-item">
