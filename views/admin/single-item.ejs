@@ -130,14 +130,12 @@
                             </button>
                           </form>                          
                         <% } %>
-                        <% if (item.breached == false) { %>
                           <form action="/admin/delete-item/<%= item._id %>" method="post">
                             <button type="submit" class="btn btn-danger btn-sm btn-icon-text">
                               Delete
                               <i class="typcn typcn-delete-outline btn-icon-append"></i>                          
                             </button>
-                          </form>                          
-                        <% } %>
+                          </form>        
                         
                       </div>
                     </td>
