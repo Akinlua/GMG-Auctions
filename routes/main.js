@@ -45,7 +45,8 @@ const upload = multer({
 const {
     createItem, readItems, readItems_User, EachItem, home,
     itemForm, search, EachItemGallery, charge, payPage, editItem,
-    editItemPatch, about, postComment, new_createItem, new_editItemPatch
+    editItemPatch, about, postComment, new_createItem, new_editItemPatch, bidPage,
+    bid
 } = require('../controllers/main.js')
 
 router.get('/', home)
@@ -63,8 +64,11 @@ router.get('/item-gallery/:id', EachItemGallery)
 //payment 
 // router.post('/create-checkout-session/:id',authMiddleware,notAdmin,  charge)
 router.post('/charge/:id',authMiddleware,notAdmin,  charge)
+router.post('/bid/:id',authMiddleware,notAdmin,  bid)
 
 router.get('/pay/:id',authMiddleware, notAdmin, payPage)
+router.get('/bid/:id',authMiddleware, notAdmin, bidPage)
+
 
 router.get('/editItem/:id', authMiddleware,notAdmin, editItem)
 router.patch('/editItem/:id', authMiddleware,notAdmin,upload, new_editItemPatch)//same

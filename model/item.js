@@ -79,7 +79,28 @@ const ItemSchema = new mongoose.Schema({
     },
     receipturl: {
         type: String
+    },
+    verified_Bidders: [
+        {
+            bider :{type: String},
+            biderId :{type: mongoose.Schema.Types.ObjectId, ref: 'User',},
+            bider_holdId :{type: String},
+        },
+    ],
+    winner: {
+        type: String
+    },
+    winnerId: {
+        type: String
+    },
+    winnerHoldId: {
+        type: String
+    },
+    winner_chargId_holdId: {
+        type: String
+
     }
+
 
 
 }, {timestamps: true})

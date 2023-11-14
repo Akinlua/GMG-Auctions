@@ -81,6 +81,7 @@
                     <th>Paid</th>
                     <th>Sold</th>
                     <th>Breached</th>
+                    <th>Winner</th>
                     <th>Auction Date</th>
                     <th>Actions</th>
                   </tr>
@@ -98,6 +99,11 @@
                     <td><%= item.paid %></td>
                     <td><%= item.sold %></td>
                     <td><%= item.breached %></td>
+                    <% if (item.winner) { %>
+                    <td><%= item.winner %></td>
+                    <% } else {%>
+                      <td>No winner yet</td>
+                    <% } %>
                     <% if (item.auctionDate) { %>
                         <td><%= item.auctionDate %></td>
                     <% } else { %>
@@ -122,7 +128,7 @@
                               <i class="typcn typcn-delete-outline btn-icon-append"></i>                          
                             </button>
                           </form>   
-                        <% if (item.breached == false) { %>
+                        <% if (item.breached == false && item.holdId && item.winnerHoldId) { %>
                           <form action="/admin/breached-item/<%= item._id %>" method="post">
                             <button type="submit" class="btn btn-danger btn-sm btn-icon-text mr-3">
                               Breached

@@ -10,6 +10,7 @@ const connectDB = require('./db/connect')
 const mainRouter = require('./routes/main')
 const adminRouter = require('./routes/admin')
 const userRouter = require('./routes/user')
+const apiRouter = require('./routes/api.js')
 const methodOverride = require('method-override')
 const {authMiddleware, authAdmin} = require('./middleware/authentication.js')
 
@@ -43,6 +44,8 @@ app.use(express.static('public'))
 app.use('', userRouter)
 app.use('', mainRouter)
 app.use('/admin', authMiddleware, authAdmin, adminRouter)
+app.use('/api', apiRouter)
+
 
 // //error handler
 app.use(errorHandlerMiddleware);

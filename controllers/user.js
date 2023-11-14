@@ -41,7 +41,11 @@ const postRegister = async (req,res) => {
         const token =  await jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_LIFETIME})
         res.cookie('token', token, {httpOnly: true})
 
-        res.redirect('/')
+        if(user.admin){
+            return res.redirect('/admin')
+        } else {    
+            return res.redirect('/user-items')
+        }
     }  catch (error) {
 
         let error_ = "Username or Email already Exists"
@@ -70,7 +74,11 @@ const postLogin = async (req, res) => {
     const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_LIFETIME})
     res.cookie('token', token, {httpOnly: true})
 
-    res.redirect('/')
+    if(user.admin){
+        return res.redirect('/admin')
+    } else {    
+        return res.redirect('/user-items')
+    }
 }
 
 const resetPasswordPage = async (req, res) => {

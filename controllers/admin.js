@@ -208,7 +208,7 @@ const breached = async (req, res) => {
     }
 
     try{
-        // run the code to remove the money on which an hold was made
+        // run the code to remove the money on which an hold was made for both owner and winner
         const hold_id = item.holdId
         if(hold_id){
             const capturedCharge = await stripe.charges.capture(hold_id);
@@ -218,14 +218,24 @@ const breached = async (req, res) => {
             }
         }
 
+        // remove for winner
+        const winner_hold_id = item.winnerHoldId
+        if(winner_hold_id){
+            const capturedCharge = await stripe.charges.capture(winner_hold_id);
+            if(capturedCharge){
+                item.winner_chargId_holdId = capturedCharge.id
+                await item.save()
+            }
+        }
+
     } catch (error){
         console.log(error)
         return res.render('admin/error-500', {layout: noLayout, name: "Bad Request", message: "An error occurred with processing the payment on the hold", statusCode: 400})
     }
         
-    const item_ = await Item.findOneAndUpdate({_id: req.params.id}, {breached: true, holdId: ''}, {new: true, runValidators: true})
+    const item_ = await Item.findOneAndUpdate({_id: req.params.id}, {breached: true, holdId: '', winnerHoldId: ''}, {new: true, runValidators: true})
 
-    res.redirect(`/admin/breached-items?message=${item.name} successfully flagged as breached`)
+    res.redirect(`/admin/breached-items?message=${item.name} successfully flagged as breached: The money has been removed from both the owner of the item and winner of the auction`)
 }
 
 const unbreached = async (req, res) => {
@@ -241,6 +251,7 @@ const unbreached = async (req, res) => {
     // run the code to refund the money on which an hold was made that was removed
 
     const chargeId = item.chargId_holdId
+    const chargeId2 = item.winner_chargId_holdId
     try{
         // Use the Stripe API to refund the charge 
         if(chargeId){
@@ -248,14 +259,21 @@ const unbreached = async (req, res) => {
                 charge: chargeId,
             });
         }
+
+        // refund for winner
+        if(chargeId2){
+            const refund = await stripe.refunds.create({
+                charge: chargeId2,
+            });
+        }
     } catch (error){
         console.log(error)
         return res.render('admin/error-500', {layout: noLayout, name: "Bad Request", message: "An error occurred with refund", statusCode: 400})
     }
 
-    const item_ = await Item.findOneAndUpdate({_id: req.params.id}, {breached: false, chargId_holdId: ''}, {new: true, runValidators: true})
+    const item_ = await Item.findOneAndUpdate({_id: req.params.id}, {breached: false, chargId_holdId: '', winner_chargId_holdId: ''}, {new: true, runValidators: true})
 
-    res.redirect(`/admin/breached-items?message=UNDO successfully for ${item.name}`)
+    res.redirect(`/admin/breached-items?message=UNDO successfully for ${item.name}: Money has been refunded to both owner of the item and winner of the auction`)
 }
 
 const deleteItemByAdmin = async (req, res) => {

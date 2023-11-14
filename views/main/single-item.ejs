@@ -25,7 +25,7 @@
                     <pre style="font-family: inherit; font-size: inherit;"><%= item.description %></pre>
                     <% if (item.sold == false) { %>
                         <blockquote class="blockquote wow fadeInUp">
-                            <p>To Take part of the auction by biding, click on the link here - <a href="#" style="color: #f7b500; text-decoration: none;">Bid</a>.</p>
+                            <p>To Take part of the auction by biding, click on the link here - <a href="/bid/<%= item._id %>" style="color: #f7b500; text-decoration: none;">Bid</a>.</p>
                         </blockquote>
                     <% } %>
                 </div>
@@ -33,49 +33,7 @@
                   
                 </div>
 
-
-                <!-- COmments -->
-                <div class="post-header">
-                    <h2 style="margin-bottom: 30px;" id="comment">Comments</h2>
-                </div>
-                <% if (comments.length>0) { %>
-                    <% comments.forEach(comment => { %>
-                        <div class="post-content wow fadeInUp">
-                            <h4><%= comment.owner %></h4>                        
-                            <h6><%= comment.message %> <small> <%= comment.date %></small></h6>
-                        </div>
-                    <% }) %>
-                <% } else { %>
-                    <p>Be first to comment</p>
-                <% } %>
-                <% if (count > limit) { %>
-                    <% var new_limit = limit + 5 %>
-                    <a href="/item/<%= item._id %>?limit=<%= new_limit %>">View more</a>
-                <% } %>
-                <div class="post-tags wow fadeInUp">
-                  
-                </div>
-                <!-- end comments -->
-               
-                <div class="comment-section wow fadeInUp">
-                    <p style="color: red;"> <%= error %></p>
-                    <h5 class="section-title">Leave a Reply</h5>
-                    <form action="/post-comment/<%= item._id %>" method="post" class="gmg-comment-form" >
-                        <div class="row">
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-12">
-                                <label for="message">*Message</label>
-                                <textarea name="message" id="message" rows="10" class="gmg-textarea" maxlength="1500" required></textarea>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-submit">Send</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+              
             </div>
             <div class="col-md-4">
                 <div class="sidebar-widget wow fadeInUp">

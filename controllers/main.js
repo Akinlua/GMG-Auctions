@@ -14,7 +14,7 @@ const stripePublickey = process.env.STRIPE_PUBLIC_KEY
 const stripe = require('stripe')(stripeSecretkey);
 
 
-const url = 'http://127.0.0.1:3000'
+const url = 'https://gmgauctions.co.uk'
 
 
 const allPages = async (req, res) => {
@@ -79,6 +79,123 @@ const payPage = async (req, res) => {
         is_admin, stripePublickey,
         item, success, error, cancel
     })
+}
+
+
+const bidPage = async (req, res) => {
+    const {is_user, is_admin} = await allPages(req, res)
+
+    const {id} = req.params
+
+    const item = await Item.findById(id)
+    if(!item){
+        return res.render('main/404', {
+            title: "404 Error",
+            description: "",
+            image_url: "",
+            is_user, is_admin, stripePublickey
+        })
+    }
+
+    if(req.userId == item.ownerId){
+        return res.render('admin/error-500',{layout: noLayout, name: "Unauthorized", message: "You are not allowed to perform this action: You can't bid on your item", statusCode: 401})
+    }
+    // if already bidded not allowed again
+    var bidded = false
+    item.verified_Bidders.forEach(verified => {
+        if(verified.biderId == req.userId){
+            return bidded = true
+        }
+     });
+    if(bidded == true)  return res.render('admin/error-500',{layout: noLayout, name: "Unauthorized", message: "You are not allowed to perform this action: Can only bid once", statusCode: 401})
+
+    let error, cancel, success = ''
+    if(req.query.error) error = req.query.error
+    if(req.query.cancel) cancel = req.query.cancel
+    if(req.query.success) success = req.query.success
+
+
+    res.render('main/bid', {
+        title: "Bid",
+        description: "",
+        image_url: "",
+        is_user,
+        is_admin, stripePublickey,
+        item, success, error, cancel
+    })
+}
+
+const bid = async (req, res) => {
+    const {is_user, is_admin} = await allPages(req, res)
+
+    const { amount, token, name, email } = req.body;
+    if(!email){
+        return res.redirect(`/bid/${req.params.id}?error=Provide Email`);
+    }
+
+    if(!token){
+        return res.redirect(`/bid/${req.params.id}?error=Fill in the card details`);
+    }
+
+    try {
+
+        const {id} = req.params
+        const item = await Item.findById(id)
+        if(!item){
+            return res.render('main/404', {
+                title: "404 Error",
+                description: "",
+                image_url: "",
+                is_user, is_admin, stripePublickey
+            })
+        }
+        if(req.userId == item.ownerId){
+            return res.render('admin/error-500',{layout: noLayout, name: "Unauthorized", message: "You are not allowed to perform this action: You can't bid on your item", statusCode: 401})
+        }
+    
+        // if already bidded not allowed again
+        var bidded = false
+        item.verified_Bidders.forEach(verified => {
+            if(verified.biderId == req.userId){
+                return bidded = true
+            }
+        });
+        if(bidded == true)  return res.render('admin/error-500',{layout: noLayout, name: "Unauthorized", message: "You are not allowed to perform this action: Can only bid once", statusCode: 401})
+
+         // hold payment
+         const hold = await stripe.charges.create({
+            amount: 19500,
+            currency: 'GBP',
+            source: token,
+            description: `Hold £195 for displaying ${name}'s item for auctioning`,
+            capture: false,
+            receipt_email: email,
+            metadata: {
+                name: name,
+            },
+        });
+
+        if(!hold){
+            error = "Make sure to fill in the card details"
+            return res.redirect(`/bid/${req.params.id}?error=${error}`);
+        }
+
+        const user = await User.findById(req.userId);
+        // upate item
+        const user_ = {
+            bider : user.username,
+            biderId : user._id,
+            bider_holdId : hold.id,
+        }
+
+        item.verified_Bidders.push(user_);
+        await item.save()
+    
+        res.redirect(`/item/${item._id}`);
+    } catch (err) {
+      console.error(err);
+      res.redirect(`/bid/${req.params.id}?error=An error Occurred.`);
+    }
 }
 
 const charg =  async (req, res) => {
@@ -239,6 +356,7 @@ const purchase = async (req,res) => {
 const home = async (req, res) => {
 
     const {is_user, is_admin} = await allPages(req, res)
+
     res.render('main/home',{
         title: "Home",
         description: "",
@@ -878,5 +996,6 @@ module.exports = {
     about, postComment,
     new_createItem,
     new_editItemPatch,
-    url
+    url,
+    bidPage, bid
 }
