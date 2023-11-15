@@ -6,6 +6,7 @@ const {pagination, changeToInt, deleteFile, getDate} = require('../middleware/he
 const noLayout = '../views/layouts/nothing.ejs'
 const jwt = require('jsonwebtoken')
 const { LENGTH_REQUIRED } = require("http-status-codes")
+const {auth} = require('../middleware/authentication.js')
 const jwtSecret = process.env.JWT_SECRET
 
 const stripeSecretkey = process.env.STRIPE_SECRET_KEY
@@ -191,7 +192,7 @@ const bid = async (req, res) => {
         item.verified_Bidders.push(user_);
         await item.save()
     
-        res.redirect(`/item/${item._id}`);
+        res.redirect(`/item/${item._id}#bid_now`);
     } catch (err) {
       console.error(err);
       res.redirect(`/bid/${req.params.id}?error=An error Occurred.`);
@@ -914,13 +915,23 @@ const EachItem = async (req, res) => {
     //get all associated comment
     const count = await Comment.find({itemId: item._id}).count()
     const comments = await Comment.find({itemId: item._id}).limit(limit).sort('-createdAt')
+
+    // send user
+    const userId = await auth(req, res)
+    //check if user is verified
+    var bidded = false
+    item.verified_Bidders.forEach(verified => {
+        if(verified.biderId == userId){
+            return bidded = true
+        }
+     });
     res.render('main/single-item', {
         item, OtherItems, item_url,
         title: item.name,
         description: item.description,
         image_url: url + '/' + item.pic_path,
         is_user, is_admin, stripePublickey, error,
-        comments, limit, count
+        comments, limit, count, userId, bidded
     })
 }
 

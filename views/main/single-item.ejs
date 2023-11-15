@@ -24,8 +24,12 @@
                         
                     <pre style="font-family: inherit; font-size: inherit;"><%= item.description %></pre>
                     <% if (item.sold == false) { %>
-                        <blockquote class="blockquote wow fadeInUp">
-                            <p>To Take part of the auction by biding, click on the link here - <a href="/bid/<%= item._id %>" style="color: #f7b500; text-decoration: none;">Bid</a>.</p>
+                        <blockquote class="blockquote wow fadeInUp" id="bid_now">
+                            <% if (userId && bidded == true) { %>
+                                <p>Here's the ID- <%= userId %> you will need to make your bid here- <a href=""  style="color: #f7b500; text-decoration: none;">Bid now</a></p>
+                            <% } else {%>
+                                <p>To Take part of the auction by biding, click on the link here - <a href="/bid/<%= item._id %>" style="color: #f7b500; text-decoration: none;">Bid</a>.</p>
+                            <% } %>
                         </blockquote>
                     <% } %>
                 </div>
