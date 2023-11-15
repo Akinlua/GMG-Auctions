@@ -88,7 +88,7 @@ const bidPage = async (req, res) => {
 
     const {id} = req.params
 
-    const item = await Item.findById(id)
+    const item = await Item.findOne({_id: id, sold: false})
     if(!item){
         return res.render('main/404', {
             title: "404 Error",
@@ -141,7 +141,7 @@ const bid = async (req, res) => {
     try {
 
         const {id} = req.params
-        const item = await Item.findById(id)
+        const item = await Item.findOne({_id: id, sold: false})
         if(!item){
             return res.render('main/404', {
                 title: "404 Error",
@@ -918,6 +918,7 @@ const EachItem = async (req, res) => {
 
     // send user
     const userId = await auth(req, res)
+    const user = await User.findById(userId)
     //check if user is verified
     var bidded = false
     item.verified_Bidders.forEach(verified => {
@@ -925,13 +926,15 @@ const EachItem = async (req, res) => {
             return bidded = true
         }
      });
+
+     console.log(item.sold, user.admin)
     res.render('main/single-item', {
         item, OtherItems, item_url,
         title: item.name,
         description: item.description,
         image_url: url + '/' + item.pic_path,
         is_user, is_admin, stripePublickey, error,
-        comments, limit, count, userId, bidded
+        comments, limit, count, user, bidded
     })
 }
 
