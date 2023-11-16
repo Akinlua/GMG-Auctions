@@ -83,6 +83,7 @@ const ItemSchema = new mongoose.Schema({
     verified_Bidders: [
         {
             bider :{type: String},
+            bider_email: {type: String},
             biderId :{type: mongoose.Schema.Types.ObjectId, ref: 'User',},
             bider_holdId :{type: String},
         },
@@ -91,6 +92,9 @@ const ItemSchema = new mongoose.Schema({
         type: String
     },
     winnerId: {
+        type: String
+    },
+    winnerEmail: {
         type: String
     },
     winnerHoldId: {

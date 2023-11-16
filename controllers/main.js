@@ -185,6 +185,7 @@ const bid = async (req, res) => {
         // upate item
         const user_ = {
             bider : user.username,
+            bider_email: user.email,
             biderId : user._id,
             bider_holdId : hold.id,
         }
@@ -927,7 +928,7 @@ const EachItem = async (req, res) => {
         }
      });
 
-     console.log(item.sold, user.admin)
+    //  console.log(item.sold, user.admin)
     res.render('main/single-item', {
         item, OtherItems, item_url,
         title: item.name,

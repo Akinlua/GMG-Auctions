@@ -43,7 +43,7 @@ const getItemDetails = async (req, res) => {
 const setWinner = async (req, res) => {
 
     const {id} = req.params;
-    const {password, winner, winnerId, winner_hold_id}  = req.body
+    const {password, winner, winnerId, winner_email, winner_hold_id}  = req.body
 
     const item = await Item.findById(id)
     if(!item){
@@ -63,7 +63,7 @@ const setWinner = async (req, res) => {
     // make sure winner is part of the verified user
     var verify = 0
     item.verified_Bidders.forEach(verified => {
-        if(verified.biderId == winnerId && verified.bider == winner && verified.bider_holdId == winner_hold_id){
+        if(verified.biderId == winnerId && verified.bider == winner && verified.bider_holdId == winner_hold_id && verified.bider_email == winner_email){
             return verify = 1
         }
      });
@@ -75,12 +75,15 @@ const setWinner = async (req, res) => {
     }
     item.winner = winner
     item.winnerId = winnerId
+    item.winnerEmail = winner_email
     item.winnerHoldId = winner_hold_id
     await item.save()
 
     res.status(200).json({
         status: 200,
         message: `Winner (${winner}) succesfully declared for the auction of ${item.name}`,
+        winner: winner,
+        winner_email: winner_email
     })
 }
 
