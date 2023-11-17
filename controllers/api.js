@@ -28,11 +28,13 @@ const getItemDetails = async (req, res) => {
     }
 
     res.status(200).json({
-        name: item.name,
-        itemId: item._id,
+        id: item._id,
+        product: item.name,
+        description: item.description,
+        startPrice: item.cost,
+        image: item.pic_path,
         seller: item.owner,
         sellerId: item.ownerId,
-        imageURL: item.pic_path,
         verifiedUsers: item.verified_Bidders,
         winner: item.winner ?? null,
         winnerId: item.winnerId  ?? null,
