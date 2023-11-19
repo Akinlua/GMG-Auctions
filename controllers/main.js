@@ -939,7 +939,7 @@ const EachItem = async (req, res) => {
     //check if user is verified
     var bidded = false
     item.verified_Bidders.forEach(verified => {
-        if(verified.biderId == userId){
+        if(verified.bider == user.username){
             return bidded = true
         }
      });

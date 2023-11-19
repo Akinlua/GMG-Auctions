@@ -3,6 +3,7 @@
 <main class="blog-post-single">
     <div class="container">
         <h1 class="post-title wow fadeInUp"><%= item.name %></h1>
+        <h5>Item ID: <%= item.id %></h5>        
         <div class="row">
             <div class="col-md-8 blog-post-wrapper">
                 <div class="post-header wow fadeInUp">
@@ -29,7 +30,7 @@
                             <% if (user.admin == false) { %>
                                 <% if (user._id && bidded == true) { %>
                                     <blockquote class="blockquote wow fadeInUp" id="bid_now">
-                                            <p>Here's the ID- <%= user._id %> you will need to make your bid here- <a href=""  style="color: #f7b500; text-decoration: none;">Bid now</a></p>
+                                            <p>Here's your user ID- <%= user.id %> you will need to make your bid here- <a href=""  style="color: #f7b500; text-decoration: none;">Bid now</a></p>
                                     </blockquote>
                                 <% } else {%>
                                     <blockquote class="blockquote wow fadeInUp" id="bid_now">
