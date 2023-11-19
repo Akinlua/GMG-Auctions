@@ -1,6 +1,7 @@
 const fs = require("fs");
 const nodemailer = require("nodemailer");
 const User = require("../model/user");
+const crypto = require('crypto');
 
 const pagination = async (result, count, req, res) => {
   let page = Number(req.query.page) || 1;
@@ -176,6 +177,52 @@ const resetToken = async () => {
   });
 };
 
+function generateUniqueID() {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const digits = '0123456789';
+
+  // Generate 3 random characters
+  let randomChars = '';
+  while (randomChars.length < 3) {
+    const randomBytes = crypto.randomBytes(1);
+    const index = randomBytes[0] % chars.length;
+    randomChars += chars[index];
+  }
+
+  // Generate 3 random digits
+  let randomDigits = '';
+  while (randomDigits.length < 3) {
+    const randomBytes = crypto.randomBytes(1);
+    const index = randomBytes[0] % digits.length;
+    randomDigits += digits[index];
+  }
+
+  return randomChars + randomDigits;
+}
+
+function generateUniqueID_user() {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const digits = '0123456789';
+
+  // Generate 3 random characters
+  let randomChars = '';
+  while (randomChars.length < 3) {
+    const randomBytes = crypto.randomBytes(1);
+    const index = randomBytes[0] % chars.length;
+    randomChars += chars[index];
+  }
+
+  // Generate 3 random digits
+  let randomDigits = '';
+  while (randomDigits.length < 3) {
+    const randomBytes = crypto.randomBytes(1);
+    const index = randomBytes[0] % digits.length;
+    randomDigits += digits[index];
+  }
+
+  return randomDigits + randomChars;
+}
+
 module.exports = {
   pagination,
   deleteFile,
@@ -185,4 +232,6 @@ module.exports = {
   generateToken,
   sendNotification,
   resetToken,
+  generateUniqueID,
+  generateUniqueID_user
 };

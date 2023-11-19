@@ -4,7 +4,7 @@ const User = require('../model/user')
 const jwtSecret = process.env.JWT_SECRET
 const noLayout = '../views/layouts/nothing.ejs'
 const {allPages, url} = require('./main')
-const {generateToken, sendNotification} = require('../middleware/helper')
+const {generateToken, sendNotification, generateUniqueID_user} = require('../middleware/helper')
 
 
 const stripeSecretkey = process.env.STRIPE_SECRET_KEY
@@ -37,7 +37,18 @@ const postRegister = async (req,res) => {
         const {username, password, email} = req.body
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        const user = await User.create({username, password: hashedPassword, email})
+        // generate unique ID
+        var unique_id = await generateUniqueID_user()
+
+        // check if id isnt present
+        var check_uniqueId = await User.find({id: unique_id})
+
+        while(check_uniqueId.length > 0){
+            unique_id = await generateUniqueID_user()
+            check_uniqueId = await User.find({id: unique_id})
+        }
+
+        const user = await User.create({id: unique_id,  username, password: hashedPassword, email})
         const token =  await jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_LIFETIME})
         res.cookie('token', token, {httpOnly: true})
 

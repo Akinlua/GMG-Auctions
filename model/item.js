@@ -3,6 +3,9 @@ const { boolean, array } = require('joi')
 const mongoose = require('mongoose')
 
 const ItemSchema = new mongoose.Schema({
+    id: {
+        type: String
+    },
     owner:{
         type: String,
         required:[true, 'Please provide User'],
@@ -84,7 +87,7 @@ const ItemSchema = new mongoose.Schema({
         {
             bider :{type: String},
             bider_email: {type: String},
-            biderId :{type: mongoose.Schema.Types.ObjectId, ref: 'User',},
+            biderId :{type: String},
             bider_holdId :{type: String},
         },
     ],

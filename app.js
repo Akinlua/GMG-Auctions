@@ -15,6 +15,7 @@ const methodOverride = require('method-override')
 const {authMiddleware, authAdmin} = require('./middleware/authentication.js')
 
 const cookieParser = require('cookie-parser')
+const {pagination, changeToInt, deleteFile, getDate, generateUniqueID} = require('./middleware/helper.js')
 
 
 // error handler

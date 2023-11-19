@@ -2,11 +2,12 @@ const Item = require("../model/item")
 const User = require('../model/user.js')
 const Comment = require('../model/comments')
 const path_ = require('path')
-const {pagination, changeToInt, deleteFile, getDate} = require('../middleware/helper')
+const {pagination, changeToInt, deleteFile, getDate, generateUniqueID} = require('../middleware/helper')
 const noLayout = '../views/layouts/nothing.ejs'
 const jwt = require('jsonwebtoken')
 const { LENGTH_REQUIRED } = require("http-status-codes")
 const {auth} = require('../middleware/authentication.js')
+
 const jwtSecret = process.env.JWT_SECRET
 
 const stripeSecretkey = process.env.STRIPE_SECRET_KEY
@@ -102,9 +103,10 @@ const bidPage = async (req, res) => {
         return res.render('admin/error-500',{layout: noLayout, name: "Unauthorized", message: "You are not allowed to perform this action: You can't bid on your item", statusCode: 401})
     }
     // if already bidded not allowed again
+    const user = await User.findById(req.userId)
     var bidded = false
     item.verified_Bidders.forEach(verified => {
-        if(verified.biderId == req.userId){
+        if(verified.bider == user.username){
             return bidded = true
         }
      });
@@ -155,12 +157,13 @@ const bid = async (req, res) => {
         }
     
         // if already bidded not allowed again
+        const user__ = await User.findById(req.userId)
         var bidded = false
         item.verified_Bidders.forEach(verified => {
-            if(verified.biderId == req.userId){
+            if(verified.bider == user__.username){
                 return bidded = true
             }
-        });
+         });
         if(bidded == true)  return res.render('admin/error-500',{layout: noLayout, name: "Unauthorized", message: "You are not allowed to perform this action: Can only bid once", statusCode: 401})
 
          // hold payment
@@ -186,7 +189,7 @@ const bid = async (req, res) => {
         const user_ = {
             bider : user.username,
             bider_email: user.email,
-            biderId : user._id,
+            biderId : user.id,
             bider_holdId : hold.id,
         }
 
@@ -200,56 +203,56 @@ const bid = async (req, res) => {
     }
 }
 
-const charg =  async (req, res) => {
-    try{
-        const {is_user, is_admin} = await allPages(req, res)
+// const charg =  async (req, res) => {
+//     try{
+//         const {is_user, is_admin} = await allPages(req, res)
         
-        const {id} = req.params
-        const item = await Item.findById(id).select('name pic_path description ownerId paid')
-        if(!item){
-            return res.render('main/404', {
-                title: "404 Error",
-                description: "",
-                image_url: "",
-                is_user, is_admin, stripePublickey
-            })
-        }
+//         const {id} = req.params
+//         const item = await Item.findById(id).select('name pic_path description ownerId paid')
+//         if(!item){
+//             return res.render('main/404', {
+//                 title: "404 Error",
+//                 description: "",
+//                 image_url: "",
+//                 is_user, is_admin, stripePublickey
+//             })
+//         }
 
-        if(req.userId != item.ownerId){
-            return res.render('admin/error-500',{layout: noLayout, name: "Unauthorized", message: "You are not allowed to perform this action", statusCode: 401})
-        }
+//         if(req.userId != item.ownerId){
+//             return res.render('admin/error-500',{layout: noLayout, name: "Unauthorized", message: "You are not allowed to perform this action", statusCode: 401})
+//         }
 
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [
-              {
-                price_data: {
-                  currency: 'GBP',
-                  product_data: {
-                    name: item.name,
-                  },
-                  unit_amount: 2500, // 25.00 euros Amount in cents
-                },
-                quantity: 1,
-              },
-            ],
-            mode: 'payment',
-            success_url: `${url}/pay/${item._id}?success=Your Payment has been successful, wait for admin to approve your item?sessionId=${session.id}`,
-            cancel_url: `${url}/pay/${item._id}?cancel="Payment Cancelled."`,
-          });
+//         const session = await stripe.checkout.sessions.create({
+//             payment_method_types: ['card'],
+//             line_items: [
+//               {
+//                 price_data: {
+//                   currency: 'GBP',
+//                   product_data: {
+//                     name: item.name,
+//                   },
+//                   unit_amount: 2500, // 25.00 euros Amount in cents
+//                 },
+//                 quantity: 1,
+//               },
+//             ],
+//             mode: 'payment',
+//             success_url: `${url}/pay/${item._id}?success=Your Payment has been successful, wait for admin to approve your item?sessionId=${session.id}`,
+//             cancel_url: `${url}/pay/${item._id}?cancel="Payment Cancelled."`,
+//           });
         
-        console.log(session)
-        item.paidId = session.id
-        await item.save()
+//         console.log(session)
+//         item.paidId = session.id
+//         await item.save()
 
-        res.json({ id: session.id });
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ error: error.message });
-    }
+//         res.json({ id: session.id });
+//     } catch (error) {
+//         console.log(error)
+//         res.status(500).json({ error: error.message });
+//     }
     
     
-}
+// }
 
 const charge = async (req, res) => {
     const {is_user, is_admin} = await allPages(req, res)
@@ -312,47 +315,47 @@ const charge = async (req, res) => {
     }
 }
 
-const purchase = async (req,res) => {
+// const purchase = async (req,res) => {
   
-    const prop_id = req.body.prop_id
-    const property = await Property.findById(prop_id)
-    if(!property) {
-        return res.render("error", {layout: noLayout, name: "Not Found",statusCode: 404, message: 'The property you are trying to purchase is not found'})
-    }
-    const total_ = property.cost
-    const total =  total_.toFixed(2) * 100 //cents
-    const payment = await stripe.charges.create({
-        amount: total,
-        source: req.body.stripeTokenId,
-        description: `Payment for ${property.name} Rent`,
-        currency: 'usd'
-    })
-    console.log('charge succesful')
+//     const prop_id = req.body.prop_id
+//     const property = await Property.findById(prop_id)
+//     if(!property) {
+//         return res.render("error", {layout: noLayout, name: "Not Found",statusCode: 404, message: 'The property you are trying to purchase is not found'})
+//     }
+//     const total_ = property.cost
+//     const total =  total_.toFixed(2) * 100 //cents
+//     const payment = await stripe.charges.create({
+//         amount: total,
+//         source: req.body.stripeTokenId,
+//         description: `Payment for ${property.name} Rent`,
+//         currency: 'usd'
+//     })
+//     console.log('charge succesful')
     
-    //check if all went well prev before changing to Paid
+//     //check if all went well prev before changing to Paid
 
-    if(payment) {
-        //change the property to paid
-        property.status = "Paid"
-        //update property dateOfPayment
-        const currentTime = moment().format("YYYY-MM-DD"); //find the date when paid, moment date
-        property.dateOfPayment = currentTime
-        await property.save()
+//     if(payment) {
+//         //change the property to paid
+//         property.status = "Paid"
+//         //update property dateOfPayment
+//         const currentTime = moment().format("YYYY-MM-DD"); //find the date when paid, moment date
+//         property.dateOfPayment = currentTime
+//         await property.save()
 
-        //create notification that payment has been made
-        const text = `You have just paid ${total} for ${property.name} Rent`
-        const title = `Payment for ${property.name} Rent`
-        const notice = await Notice.create({owner: property.owner, message: text, title: title})
+//         //create notification that payment has been made
+//         const text = `You have just paid ${total} for ${property.name} Rent`
+//         const title = `Payment for ${property.name} Rent`
+//         const notice = await Notice.create({owner: property.owner, message: text, title: title})
 
 
-    } else {
-        return res.status(500).json({message: "Error in payment"})
-    }
+//     } else {
+//         return res.status(500).json({message: "Error in payment"})
+//     }
     
-    res.status(200).json({message: "Done"})//DONT CHANGE WHILE CHANGING OTHER ERROR RESPONSE
+//     res.status(200).json({message: "Done"})//DONT CHANGE WHILE CHANGING OTHER ERROR RESPONSE
     
             
-}
+// }
 
 
 const home = async (req, res) => {
@@ -396,85 +399,85 @@ const deleteCollectedFile = async (files) => {
     }
 }
 
-const createItem = async (req, res) => {
-    const {is_user, is_admin} = await allPages(req, res)
+// const createItem = async (req, res) => {
+//     const {is_user, is_admin} = await allPages(req, res)
 
-    try{
-        const {name, cost, description, checkBox} = req.body
+//     try{
+//         const {name, cost, description, checkBox} = req.body
  
-        //must agree to the form- checkBox checked
-        let error = ""
-        if(checkBox != 'on'){
-            //delete any image collected
-            await deleteCollectedFile(req.files)
-            error = "Make sure you agree to the consent form by checking the box below"
-            return  res.render('main/post-item',{error: error,
-                title: "Post Item Form",
-                description: "",
-                image_url: "",
-                is_user, is_admin, stripePublickey
-            })
-        }
-        if(!req.files.file){
-            await deleteCollectedFile(req.files)
-            error = "Make sure to upload the neccessary files"
-            return  res.render('main/post-item',{error: error,
-                title: "Post Item Form",
-                description: "",
-                image_url: "",
-                is_user, is_admin, stripePublickey
-            })
-        }
+//         //must agree to the form- checkBox checked
+//         let error = ""
+//         if(checkBox != 'on'){
+//             //delete any image collected
+//             await deleteCollectedFile(req.files)
+//             error = "Make sure you agree to the consent form by checking the box below"
+//             return  res.render('main/post-item',{error: error,
+//                 title: "Post Item Form",
+//                 description: "",
+//                 image_url: "",
+//                 is_user, is_admin, stripePublickey
+//             })
+//         }
+//         if(!req.files.file){
+//             await deleteCollectedFile(req.files)
+//             error = "Make sure to upload the neccessary files"
+//             return  res.render('main/post-item',{error: error,
+//                 title: "Post Item Form",
+//                 description: "",
+//                 image_url: "",
+//                 is_user, is_admin, stripePublickey
+//             })
+//         }
     
-        // Access the uploaded file details
-        const { originalname, filename, path } = req.files.file[0];
+//         // Access the uploaded file details
+//         const { originalname, filename, path } = req.files.file[0];
     
-        const newPath = path_.join(...path.split('\\').slice(1))
+//         const newPath = path_.join(...path.split('\\').slice(1))
     
-        // Access the uploaded file details
-        const images = req.files.imagesArray;
-        let imagesPaths = []
-        let imagesfilenames = []
-        let imagesoriginal = []
+//         // Access the uploaded file details
+//         const images = req.files.imagesArray;
+//         let imagesPaths = []
+//         let imagesfilenames = []
+//         let imagesoriginal = []
     
-        if(images){
-            for (const image of images) {
-                const new_path = path_.join(...image.path.split('\\').slice(1))
-                imagesPaths.push(new_path)
-                imagesoriginal.push(image.originalname)
-                imagesfilenames.push(image.filename)
-            }    
-        }
+//         if(images){
+//             for (const image of images) {
+//                 const new_path = path_.join(...image.path.split('\\').slice(1))
+//                 imagesPaths.push(new_path)
+//                 imagesoriginal.push(image.originalname)
+//                 imagesfilenames.push(image.filename)
+//             }    
+//         }
         
-        const user = await User.findById(req.userId)
-        const item = await Item.create({
-             owner: user.username, ownerId: user._id, 
-             name, cost, description, 
-             agreed_consent: true, 
-             pic_originalname: originalname, 
-             pic_filename: filename, pic_path: newPath,
-             gallery_paths: imagesPaths, 
-             gallery_originalnames: imagesoriginal,
-             gallery_filenames: imagesfilenames
-            })
+//         const user = await User.findById(req.userId)
+//         const item = await Item.create({
+//              owner: user.username, ownerId: user._id, 
+//              name, cost, description, 
+//              agreed_consent: true, 
+//              pic_originalname: originalname, 
+//              pic_filename: filename, pic_path: newPath,
+//              gallery_paths: imagesPaths, 
+//              gallery_originalnames: imagesoriginal,
+//              gallery_filenames: imagesfilenames
+//             })
     
-        res.redirect(`/pay/${item._id}`)
-    } catch(error) {
-        console.log(error)
-        //delete any image collected
-        await deleteCollectedFile(req.files)
+//         res.redirect(`/pay/${item._id}`)
+//     } catch(error) {
+//         console.log(error)
+//         //delete any image collected
+//         await deleteCollectedFile(req.files)
 
-        error = "An error Occurred: Make sure to follow the instructions"
-        return  res.render('main/post-item',{error: error,
-            title: "Post Item Form",
-            description: "",
-            image_url: "",
-            is_user, is_admin, stripePublickey
-        })
-    }
+//         error = "An error Occurred: Make sure to follow the instructions"
+//         return  res.render('main/post-item',{error: error,
+//             title: "Post Item Form",
+//             description: "",
+//             image_url: "",
+//             is_user, is_admin, stripePublickey
+//         })
+//     }
 
    
-}
+// }
 
 const new_createItem = async (req, res) => {
     const {is_user, is_admin} = await allPages(req, res)
@@ -556,7 +559,20 @@ const new_createItem = async (req, res) => {
             })
         }
 
+
+        // generate unique ID
+        var unique_id = await generateUniqueID()
+
+        // check if id isnt present
+        var check_uniqueId = await Item.find({id: unique_id})
+
+        while(check_uniqueId.length > 0){
+            unique_id = await generateUniqueID()
+            check_uniqueId = await Item.find({id: unique_id})
+        }
+
         const item = await Item.create({
+            id: unique_id,
              owner: user.username, ownerId: user._id, 
              name, cost, description, 
              agreed_consent: true, 
@@ -997,7 +1013,7 @@ const postComment = async (req, res) => {
     res.redirect(`/item/${item._id}#comment`)
 }
 module.exports = {
-    createItem,
+    // createItem,
     readItems,
     readItems_User,
     EachItem,

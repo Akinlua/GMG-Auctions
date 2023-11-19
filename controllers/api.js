@@ -13,12 +13,37 @@ const stripePublickey = process.env.STRIPE_PUBLIC_KEY
 
 const stripe = require('stripe')(stripeSecretkey);
 
+const getAllItemDetails = async (req, res) => {
+    const items = await Item.find({})   
+
+    const list = []
+    for (const item of items){
+        
+        const validIds = {}
+        for (verified in item.verified_Bidders) {
+            validIds[ item.verified_Bidders[verified].biderId] =  item.verified_Bidders[verified].bider_email 
+        }
+
+        const res = {
+            id: item.id,
+            product: item.name,
+            description: item.description,
+            startPrice: item.cost,
+            image: item.pic_path,
+            validIds: validIds
+        }
+
+        list.push(res)
+    }
+
+    res.status(200).json(list)
+}
 
 const getItemDetails = async (req, res) => {
 
     const {id} = req.params
 
-    const item = await Item.findById(id)
+    const item = await Item.findOne({id: id})
 
     if(!item){
         return res.status(404).json({
@@ -27,27 +52,27 @@ const getItemDetails = async (req, res) => {
         })
     }
 
+    const validIds = {}
+    for (verified in item.verified_Bidders) {
+        validIds[ item.verified_Bidders[verified].biderId] =  item.verified_Bidders[verified].bider_email 
+    }
+    // console.log(validIds)
     res.status(200).json({
-        id: item._id,
+        id: item.id,
         product: item.name,
         description: item.description,
         startPrice: item.cost,
         image: item.pic_path,
-        seller: item.owner,
-        sellerId: item.ownerId,
-        verifiedUsers: item.verified_Bidders,
-        winner: item.winner ?? null,
-        winnerId: item.winnerId  ?? null,
-        winner_hold_id: item.winnerHoldId  ?? null
+        validIds: validIds
     })
 }
 
 const setWinner = async (req, res) => {
 
     const {id} = req.params;
-    const {password, winner, winnerId, winner_email, winner_hold_id}  = req.body
+    const {password, winnerId, winner_email}  = req.body
 
-    const item = await Item.findById(id)
+    const item = await Item.findOne({id: id})
     if(!item){
         return res.status(404).json({
             status: 404,
@@ -64,8 +89,11 @@ const setWinner = async (req, res) => {
 
     // make sure winner is part of the verified user
     var verify = 0
+    var winner, winner_hold_id
     item.verified_Bidders.forEach(verified => {
-        if(verified.biderId == winnerId && verified.bider == winner && verified.bider_holdId == winner_hold_id && verified.bider_email == winner_email){
+        if(verified.biderId == winnerId && verified.bider_email == winner_email){
+            winner = verified.bider
+            winner_hold_id = verified.bider_holdId
             return verify = 1
         }
      });
@@ -91,5 +119,6 @@ const setWinner = async (req, res) => {
 
 module.exports = {
    getItemDetails,
-   setWinner
+   setWinner,
+   getAllItemDetails
 }
