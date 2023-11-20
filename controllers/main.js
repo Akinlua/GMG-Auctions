@@ -938,12 +938,14 @@ const EachItem = async (req, res) => {
     const user = await User.findById(userId)
     //check if user is verified
     var bidded = false
-    item.verified_Bidders.forEach(verified => {
-        if(verified.bider == user.username){
-            return bidded = true
-        }
-     });
-
+    if(user){
+        item.verified_Bidders.forEach(verified => {
+            if(verified.bider == user.username){
+                return bidded = true
+            }
+         });    
+    }
+    
     //  console.log(item.sold, user.admin)
     res.render('main/single-item', {
         item, OtherItems, item_url,
