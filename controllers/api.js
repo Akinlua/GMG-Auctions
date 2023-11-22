@@ -2,7 +2,8 @@ const Item = require("../model/item")
 const User = require('../model/user.js')
 const Comment = require('../model/comments')
 const path_ = require('path')
-const {pagination, changeToInt, deleteFile, getDate} = require('../middleware/helper')
+const {pagination, changeToInt, deleteFile, getDate, saveImageFromUrl} = require('../middleware/helper')
+const {url} = require('./main.js')
 const noLayout = '../views/layouts/nothing.ejs'
 const jwt = require('jsonwebtoken')
 const { LENGTH_REQUIRED } = require("http-status-codes")
@@ -18,6 +19,14 @@ const getAllItemDetails = async (req, res) => {
 
     const list = []
     for (const item of items){
+
+        // save image
+        const imageUrl = item.pic_path;
+        const folderToSave = './public/item-images'; // Specify the folder path where you want to save the image
+        const imageNameToSave = item.owner + "-" + item.id + '.png';
+
+        await saveImageFromUrl(imageUrl, folderToSave, imageNameToSave);
+
         
         const validIds = {}
         for (verified in item.verified_Bidders) {
@@ -29,7 +38,7 @@ const getAllItemDetails = async (req, res) => {
             product: item.name,
             description: item.description,
             startPrice: item.cost,
-            image: item.pic_path,
+            image: `${url}/item-images/${imageNameToSave}`,
             validIds: validIds
         }
 
@@ -52,6 +61,13 @@ const getItemDetails = async (req, res) => {
         })
     }
 
+    // save image
+    const imageUrl = item.pic_path;
+    const folderToSave = './public/item-images'; // Specify the folder path where you want to save the image
+    const imageNameToSave = item.owner + "-" + item.id + '.png';
+
+    await saveImageFromUrl(imageUrl, folderToSave, imageNameToSave);
+
     const validIds = {}
     for (verified in item.verified_Bidders) {
         validIds[ item.verified_Bidders[verified].biderId] =  item.verified_Bidders[verified].bider_email 
@@ -62,7 +78,7 @@ const getItemDetails = async (req, res) => {
         product: item.name,
         description: item.description,
         startPrice: item.cost,
-        image: item.pic_path,
+        image: `${url}/item-images/${imageNameToSave}`,
         validIds: validIds
     })
 }

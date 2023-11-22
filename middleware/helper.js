@@ -2,6 +2,8 @@ const fs = require("fs");
 const nodemailer = require("nodemailer");
 const User = require("../model/user");
 const crypto = require('crypto');
+const axios = require('axios');
+const path = require('path');
 
 const pagination = async (result, count, req, res) => {
   let page = Number(req.query.page) || 1;
@@ -223,6 +225,32 @@ function generateUniqueID_user() {
   return randomDigits + randomChars;
 }
 
+async function saveImageFromUrl(url, folderPath, imageName) {
+  try {
+    // Fetch the image data from the URL
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+
+    // Create a buffer from the response data
+    const imageBuffer = Buffer.from(response.data, 'binary');
+
+    if(!fs.existsSync(folderPath)){
+      fs.mkdirSync(folderPath, {recursive: true})
+    }
+    // Create the full path where the image will be saved
+    const imagePath = path.join(folderPath, imageName);
+
+    // Write the buffer to the file
+    fs.writeFileSync(imagePath, imageBuffer);
+
+
+    // console.log(`Image saved successfully at: ${imagePath}`);
+  } catch (error) {
+    console.error('Error saving image:', error.message);
+  }
+}
+
+
+
 module.exports = {
   pagination,
   deleteFile,
@@ -233,5 +261,6 @@ module.exports = {
   sendNotification,
   resetToken,
   generateUniqueID,
-  generateUniqueID_user
+  generateUniqueID_user,
+  saveImageFromUrl
 };
