@@ -244,8 +244,14 @@ async function saveImageFromUrl(url, folderPath, imageName) {
 
 
     // console.log(`Image saved successfully at: ${imagePath}`);
+    if(fs.existsSync(imagePath)){
+      return true
+    } else {
+      return false
+    }
   } catch (error) {
     console.error('Error saving image:', error.message);
+    return false
   }
 }
 

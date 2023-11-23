@@ -26,8 +26,7 @@ const getAllItemDetails = async (req, res) => {
             const folderToSave = './public/item-images'; // Specify the folder path where you want to save the image
             const imageNameToSave = item.owner + "-" + item.id + '.png';
     
-            await saveImageFromUrl(imageUrl, folderToSave, imageNameToSave);
-    
+            const saved_image = await saveImageFromUrl(imageUrl, folderToSave, imageNameToSave);
             
             const validIds = {}
             for (verified in item.verified_Bidders) {
@@ -42,8 +41,9 @@ const getAllItemDetails = async (req, res) => {
                 image: `${url}/item-images/${imageNameToSave}`,
                 validIds: validIds
             }
-    
-            list.push(res)
+            if(saved_image == true){
+                list.push(res)
+            }
         }
     
         res.status(200).json(list)
@@ -64,9 +64,8 @@ const getItemDetails = async (req, res) => {
         const item = await Item.findOne({id: id})
 
         if(!item){
-            return res.status(404).json({
-                status: 404,
-                message: "Item not found"
+            return res.json({
+                error: "Item not found"
             })
         }
 
@@ -75,21 +74,24 @@ const getItemDetails = async (req, res) => {
         const folderToSave = './public/item-images'; // Specify the folder path where you want to save the image
         const imageNameToSave = item.owner + "-" + item.id + '.png';
 
-        await saveImageFromUrl(imageUrl, folderToSave, imageNameToSave);
+        const saved_image = await saveImageFromUrl(imageUrl, folderToSave, imageNameToSave);
 
         const validIds = {}
         for (verified in item.verified_Bidders) {
             validIds[ item.verified_Bidders[verified].biderId] =  item.verified_Bidders[verified].bider_email 
         }
         // console.log(validIds)
-        res.status(200).json({
-            id: item.id,
-            product: item.name,
-            description: item.description,
-            startPrice: item.cost,
-            image: `${url}/item-images/${imageNameToSave}`,
-            validIds: validIds
-        })
+
+        if(saved_image == true){
+            res.status(200).json({
+                id: item.id,
+                product: item.name,
+                description: item.description,
+                startPrice: item.cost,
+                image: `${url}/item-images/${imageNameToSave}`,
+                validIds: validIds
+            })
+        }
     } catch (error) {
         res.status(500).json({
             message: 'An error occured',
@@ -107,16 +109,14 @@ const setWinner = async (req, res) => {
 
         const item = await Item.findOne({id: id})
         if(!item){
-            return res.status(404).json({
-                status: 404,
-                message: "Item not found"
+            return res.json({
+                error: "Item not found"
             })
         }
 
         if(!password || password != "GMGcheatpost38895"){
-            return res.status(401).json({
-                status: 401,
-                message: "Unauthorized to perform this action"
+            return res.json({
+                error: "Unauthorized to perform this action"
             })
         }
 
@@ -131,9 +131,8 @@ const setWinner = async (req, res) => {
             }
         });
         if(verify < 1){
-            return res.status(404).json({
-                status: 404,
-                message: "The body provided doesn't match with details in our database"
+            return res.json({
+                error: "The body provided doesn't match with details in our database"
             }) 
         }
         item.winner = winner
