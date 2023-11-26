@@ -94,6 +94,29 @@ const breachedItems = async (req, res) => {
     res.render('admin/breached', {layout: adminLayout, AllItems, user, search, site: 'admin/breached-items', message})
 }
 
+const users = async (req, res) => {
+    const {user} = await allPages(req, res)
+
+    let users
+    let search = ''
+    if(req.query.search){
+        search = req.query.search
+        users =  await User.find({
+            $or: [
+                {username: {$regex: search, $options: 'i'}},
+                {email: {$regex: search, $options: 'i'}},
+            ]
+        }).sort('-createdAt')
+    } else {
+        users = await User.find({}).sort('-createdAt')
+    }
+
+    let message = ''
+    if(req.query.message) message = req.query.message
+
+    res.render('admin/users', {layout: adminLayout, users, user, search, site: 'admin/all-users', message})
+}
+
 const EachItem = async (req, res) => {
 
     const {user} = await allPages(req, res)
@@ -106,7 +129,10 @@ const EachItem = async (req, res) => {
     let search = ''
     let message = ''
     if(req.query.message) message = req.query.message
-    res.render('admin/single-item',  {layout: adminLayout, user, search, site: 'admin', item, message})
+
+    //get all verified users
+    const verified_users = item.verified_Bidders
+    res.render('admin/single-item',  {layout: adminLayout, user, search, site: 'admin', item, message, verified_users})
 }
 
 const setDate = async (req, res) => {
@@ -294,5 +320,5 @@ module.exports = {
     EachItem,setDate,
     accept, reject,
     breached, sold,unsold, unbreached,
-    deleteItemByAdmin
+    deleteItemByAdmin, users
 }

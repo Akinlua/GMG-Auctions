@@ -74,7 +74,7 @@
         <ul class="navbar-nav navbar-nav-right">
           <li class="nav-item nav-search d-none d-md-block mr-0">
             <div class="input-group">
-              <input type="text" class="form-control" id="search" placeholder="Search by item or owner..." aria-label="search" aria-describedby="search" onkeydown="search(event, `<%= site %>`)">
+              <input type="text" class="form-control" id="search" placeholder="Search by item or users..." aria-label="search" aria-describedby="search" onkeydown="search(event, `<%= site %>`)">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="search">
                   <i class="typcn typcn-zoom" onclick="search({keyCode: 13}, `<%= site %>`)"></i>
@@ -274,6 +274,12 @@
             <a class="nav-link" href="/admin/breached-items">
               <i class="typcn typcn-document-text menu-icon"></i>
               <span class="menu-title" style="color: red;">Items (Breached)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/all-users">
+              <i class="typcn typcn-document-text menu-icon"></i>
+              <span class="menu-title">Registered Users</span>
             </a>
           </li>
         </ul>

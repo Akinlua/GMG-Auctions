@@ -4,7 +4,7 @@ const {authMiddleware, authAdmin} = require('../middleware/authentication.js')
 
 const {
     allItems, soldItems, breachedItems, EachItem, setDate,
-    accept, reject, breached, sold, unsold, unbreached, deleteItemByAdmin
+    accept, reject, breached, sold, unsold, unbreached, deleteItemByAdmin, users
 } = require('../controllers/admin.js')
 
 router.get('/', allItems)
@@ -24,5 +24,7 @@ router.post('/unbreached-item/:id', unbreached)
 
 //delete item by admin
 router.post('/delete-item/:id', deleteItemByAdmin)
+
+router.get('/all-users', users)
 
 module.exports = router

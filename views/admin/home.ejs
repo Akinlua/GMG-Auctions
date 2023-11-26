@@ -17,7 +17,7 @@
                 <% if (AllItems.length > 0) { %>
                 <thead>
                   <tr>
-                    <th class="ml-5">Owner</th>
+                    <th class="ml-5">ItemID</th>
                     <th>Item name</th>
                     <th>Initial Cost</th>
                     <th>Bid Price</th>
@@ -31,7 +31,8 @@
                 <tbody>
                     <% AllItems.forEach(item => { %>
                         <tr>
-                            <td>#<%= item.owner %></td>
+                            <td>#<%= item.id %></td>
+                            <td><%= item.owner %></td>
                             <td><%= item.name %> </td>
                             <td>£<%= item.cost %></td>
                             <% if (item.Bid_price) { %>
