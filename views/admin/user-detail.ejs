@@ -1,0 +1,224 @@
+<!-- partial -->
+<div class="main-panel">
+    <div class="content-wrapper">
+
+
+        <!-- User detial -->
+        <h4><%= user_.username %>'s Info</h4>
+        <br>
+
+        <div class="row">
+          
+          <div class="col-xl-6 grid-margin stretch-card flex-column">
+            <div class="row h-100">
+              <div class="col-md-12 stretch-card">
+                <div class="card">
+                   <img src="<%= user_.pic_path %>" alt="gallery item">
+                </div>
+              </div>
+            </div>
+          </div>
+
+            <div class="col-md-6">
+    
+
+              <div class="card">
+    
+                <div class="table-responsive pt-3">
+                  <table class="table table-striped project-orders-table">
+                     
+                    <thead>
+                      <tr>
+                        <th class="ml-5"><b>UserID</b></th>
+                        <th><b>Username</b></th>
+                        <th><b>Email</b></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                       
+                        <tr>
+                          <td>#<%= user_.id %></td>
+                          <td><%= user_.username %></td>
+                          <td><%= user_.email %> </td>
+                        </tr>
+                      
+                    </tbody>
+
+                    <thead>
+                      <tr>
+                        <th><b>Phone Number</b></th>
+                        <th><b>Adress</b></th>
+                        <th><b>Admin</b></th>
+                      </tr>                      
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><%= user_.phone_number %> </td>
+                        <td><%= user_.adress %> </td>
+                        <td><%= user_.admin %> </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+   
+          <br>
+
+
+          <!-- Items Posted -->
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card p-3">
+                <div class="table-responsive pt-3">
+                  <table class="table table-striped project-orders-table">
+                    <h5 style="margin: 10px 30px 30px 10px;">List of Items by <%= user_.username %> </h5>
+                    <hr>
+                    <% if (Items.length > 0) { %>
+                    <thead>
+                      <tr>
+                        <th class="ml-5">ItemID</th>
+                    <th>Item Owner</th>
+                        <th>Item name</th>
+                        <th>Initial Cost</th>
+                        <th>Bid Price</th>
+                        <th>Status	</th>
+                        <th>Paid</th>
+                        <th>Auction Date</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+    
+                    <tbody>
+                        <% Items.forEach(item => { %>
+                            <tr>
+                                <td>#<%= item.id %></td>
+                                <td><%= item.owner %></td>
+                                <td><%= item.name %> </td>
+                                <td>£<%= item.cost %></td>
+                                <% if (item.Bid_price) { %>
+                                    <td>£<%= item.Bid_price %></td>
+                                <% }else { %>
+                                    <td>Nil</td>
+                                <% } %>
+                                <td><%= item.status %></td>
+                                <td><%= item.paid %></td>
+                                <% if (item.auctionDate) { %>
+                                    <td><%= item.auctionDate %></td>
+                                <% } else { %>
+                                    <td>
+                                        <a href="/admin/item/<%= item._id %>#setDate" type="button" class="btn btn-success btn-sm btn-icon-text mr-3">
+                                            Set date
+                                            <i class="typcn typcn-edit btn-icon-append"></i>                          
+                                        </a>
+                                    </td>
+                                <% } %>
+                                <td>
+                                <div class="d-flex align-items-center">
+                                    <a href="/admin/item/<%= item._id %>" type="button" class="btn btn-success btn-sm btn-icon-text mr-3">
+                                    View
+                                    <i class="typcn typcn-edit btn-icon-append"></i>                          
+                                    </a>
+                                    <form action="/admin/sold-item/<%= item._id %>" method="post">
+                                      <button type="submit" class="btn btn-danger btn-sm btn-icon-text">
+                                        Sold
+                                        <i class="typcn typcn-delete-outline btn-icon-append"></i>                          
+                                        </button>
+                                    </form>                                
+                                </div>
+                                </td>
+                            </tr>
+                        <% }) %>
+    
+                    </tbody>
+    
+                    
+                    <% } else { %>
+                        <h4 style="margin: 10px 30px 30px 10px;">No Item Found</h4>
+                    <% } %>
+    
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <br>
+          <!-- Items won -->
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card p-3">
+                <div class="table-responsive pt-3">
+                  <table class="table table-striped project-orders-table">
+                    <h5 style="margin: 10px 30px 30px 10px;">List of Items won by <%= user_.username %> </h5>
+                    <hr>
+                    <% if (Items_won.length > 0) { %>
+                    <thead>
+                      <tr>
+                        <th class="ml-5">ItemID</th>
+                    <th>Item Owner</th>
+                        <th>Item name</th>
+                        <th>Initial Cost</th>
+                        <th>Bid Price</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+    
+                    <tbody>
+                        <% Items_won.forEach(item => { %>
+                            <tr>
+                                <td>#<%= item.id %></td>
+                                <td><%= item.owner %></td>
+                                <td><%= item.name %> </td>
+                                <td>£<%= item.cost %></td>
+                                <% if (item.Bid_price) { %>
+                                    <td>£<%= item.Bid_price %></td>
+                                <% }else { %>
+                                    <td>Nil</td>
+                                <% } %>
+                                <td>
+                                <div class="d-flex align-items-center">
+                                    <a href="/admin/item/<%= item._id %>" type="button" class="btn btn-success btn-sm btn-icon-text mr-3">
+                                    View
+                                    <i class="typcn typcn-edit btn-icon-append"></i>                          
+                                    </a>
+                                    <form action="/admin/sold-item/<%= item._id %>" method="post">
+                                      <button type="submit" class="btn btn-danger btn-sm btn-icon-text">
+                                        Sold
+                                        <i class="typcn typcn-delete-outline btn-icon-append"></i>                          
+                                        </button>
+                                    </form>                                
+                                </div>
+                                </td>
+                            </tr>
+                        <% }) %>
+    
+                    </tbody>
+    
+                    
+                    <% } else { %>
+                        <h4 style="margin: 10px 30px 30px 10px;">No Item won</h4>
+                    <% } %>
+    
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+    
+    </div>
+    <!-- content-wrapper ends -->
+    <!-- partial:partials/_footer.html -->
+    <footer class="footer">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                    <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023.  All rights reserved.</span>
+                </div>
+            </div>    
+        </div>        
+    </footer>
+    <!-- partial -->
+  </div>
+  <!-- main-panel ends -->

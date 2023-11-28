@@ -27,6 +27,12 @@
                           <td>#<%= user.id %></td>
                           <td><%= user.username %></td>
                           <td><%= user.email %> </td>
+                          <td>
+                            <a href="/admin/user-detail/<%= user._id %>" type="button" class="btn btn-success btn-sm btn-icon-text mr-3">
+                              View
+                              <i class="typcn typcn-edit btn-icon-append"></i>                          
+                              </a>
+                          </td>
                         </tr>
     
                       <% }) %>

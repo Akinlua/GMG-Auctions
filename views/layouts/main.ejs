@@ -191,9 +191,14 @@
         <li>
             <a href="#!" class="gmg-social-menu-link">YouTube</a>
         </li>
- 
-
+        <% if (is_user == true) { %>
+            <li>
+                <a href="/edit-user" style="color: white;" class="gmg-social-menu-link">Edit Your Info</a>
+            </li>
+        <% } %>
+        
     </ul>
+    
 </nav>
 <!-- Full screen search box -->
 <div id="searchModal" class="search-modal">

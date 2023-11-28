@@ -30,12 +30,63 @@ const logout = async (req, res) => {
     //res.json({ message: 'Logout successful.'});
     res.redirect('/');
 }
+const editUser = async (req, res) => {
+    const token = req.cookies.token;
+
+    const user = await User.findById(req.userId)
+
+    let error_ = ''
+    res.render('edit-register', {layout: noLayout, error: error_,user})
+}
+
+const editUserInfo = async (req,res) => {
+            
+    const user_  = await User.findById(req.userId)
+
+    try {
+        const {username, email, phone_number, adress} = req.body
+
+        let originalname_ = user_.pic_originalname
+        let image_url = user_.pic_path
+        if(req.files.file){
+            // Access the uploaded file details
+            const { originalname, buffer, mimetype } = req.files.file[0];
+            originalname_ = originalname
+            image_url = `data:${mimetype};base64,${buffer.toString('base64')}`;
+       }
+        const user = await User.findOneAndUpdate({_id: req.userId}, {
+            username, email, 
+            phone_number, adress,  
+            pic_originalname: originalname_,
+            pic_path: image_url
+        }, {runValidators: true, new: true})
+
+        if(user.admin){
+            return res.redirect('/admin')
+        } else {    
+            return res.redirect('/user-items')
+        }
+    }  catch (error) {
+        console.log(error)
+        let error_ = "Username or Email already Exists"
+        if(error.name === 'ValidationError'){
+            var msg = Object.values(error.errors).map((item) => item.message).join(',')
+            error_ = msg
+        }
+        return res.render('edit-register', {layout: noLayout, error: error_, user: user_})
+    } 
+}
 
 const postRegister = async (req,res) => {
 
     try {
-        const {username, password, email} = req.body
+        const {username, password, email, phone_number, adress} = req.body
         const hashedPassword = await bcrypt.hash(password, 10)
+
+        if(!req.files.file){
+            var error_ = "Make sure to upload the neccessary file"
+            return res.render('register', {layout: noLayout, error: error_})
+        }
 
         // generate unique ID
         var unique_id = await generateUniqueID_user()
@@ -48,7 +99,15 @@ const postRegister = async (req,res) => {
             check_uniqueId = await User.find({id: unique_id})
         }
 
-        const user = await User.create({id: unique_id,  username, password: hashedPassword, email})
+        // Access the uploaded file details
+        const { originalname, buffer, mimetype } = req.files.file[0];
+        const image_url = `data:${mimetype};base64,${buffer.toString('base64')}`;
+
+        const user = await User.create({
+            id: unique_id,  username, password: hashedPassword, email, 
+            phone_number, adress,  pic_originalname: originalname,
+            pic_path: image_url
+        })
         const token =  await jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_LIFETIME})
         res.cookie('token', token, {httpOnly: true})
 
@@ -58,8 +117,12 @@ const postRegister = async (req,res) => {
             return res.redirect('/user-items')
         }
     }  catch (error) {
-
+        console.log(error)
         let error_ = "Username or Email already Exists"
+        if(error.name === 'ValidationError'){
+            var msg = Object.values(error.errors).map((item) => item.message).join(',')
+            error_ = msg
+        }
         return res.render('register', {layout: noLayout, error: error_})
     } 
 }
@@ -206,5 +269,5 @@ module.exports = {
     login,
     logout,
     resetPassword, forgotPassword,
-    resetPasswordPage, forgotPasswordPage
+    resetPasswordPage, forgotPasswordPage, editUserInfo, editUser
 }

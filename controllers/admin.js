@@ -132,6 +132,13 @@ const EachItem = async (req, res) => {
 
     //get all verified users
     const verified_users = item.verified_Bidders
+    for (const f of verified_users){
+
+        let save = {}
+        const user = await User.findOne({username: f.bider})
+        save['userID'] = user._id
+        const check = await Object.assign(f,save)
+    }
     res.render('admin/single-item',  {layout: adminLayout, user, search, site: 'admin', item, message, verified_users})
 }
 
@@ -315,10 +322,33 @@ const deleteItemByAdmin = async (req, res) => {
 
     res.redirect(`/admin?message=Item ${item.name} Deleted successfully`)
 }
+
+const userDetails = async (req,res) => {
+    const {user} = await allPages(req, res)
+
+
+    const {id} = req.params
+    const user_ = await User.findById(id)
+    if(!user_){
+        return res.render('admin/error-404', {layout: noLayout})
+    }
+
+    // items posted
+    const Items = await Item.find({ownerId: user_._id})
+
+    // items won
+    const Items_won = await Item.find({winnerId: user_._id})
+
+    let search = ''
+    let message = ''
+    if(req.query.message) message = req.query.message
+
+    res.render('admin/user-detail', {layout: adminLayout, user,user_, search, site: 'admin/all-users', message,Items, Items_won})
+}
 module.exports = {
     allItems, breachedItems, soldItems,
     EachItem,setDate,
     accept, reject,
     breached, sold,unsold, unbreached,
-    deleteItemByAdmin, users
+    deleteItemByAdmin, users, userDetails
 }
