@@ -20,7 +20,6 @@
                     <th class="ml-5">Owner</th>
                     <th>Item name</th>
                     <th>Initial Cost</th>
-                    <th>Bid Price</th>
                     <th>Status	</th>
                     <th>Paid</th>
                     <th>Auction Date</th>
@@ -34,11 +33,6 @@
                             <td>#<%= item.owner %></td>
                             <td><%= item.name %> </td>
                             <td>£<%= item.cost %></td>
-                            <% if (item.Bid_price) { %>
-                                <td>£<%= item.Bid_price %></td>
-                            <% }else { %>
-                                <td>Nil</td>
-                            <% } %>
                             <td><%= item.status %></td>
                             <td><%= item.paid %></td>
                             <% if (item.auctionDate) { %>

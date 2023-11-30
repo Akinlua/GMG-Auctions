@@ -16,9 +16,9 @@
                             SOLD
                         <% }  else { %>
                             <% if (item.auctionDate) { %>
-                                <%= item.auctionDate %> | Current Bid Price: £<%= item.Bid_price %> 
+                                <%= item.auctionDate %> | Starting Price: £<%= item.cost %> 
                             <% } else { %>
-                                Starting Soon | Current Price: £<%= item.cost %> 
+                                Starting Soon | Starting Price: £<%= item.cost %> 
                             <% } %>
                         <% } %>
                     </h4>
@@ -30,7 +30,7 @@
                             <% if (user.admin == false) { %>
                                 <% if (user._id && bidded == true) { %>
                                     <blockquote class="blockquote wow fadeInUp" id="bid_now">
-                                            <p>Here's your user ID- <%= user.id %> you will need to make your bid here- <a href=""  style="color: #f7b500; text-decoration: none;">Bid now</a></p>
+                                            <p>Here's your user ID- <%= user.id %> you will need to make your bid here- <a href="https://chat.whatsapp.com/Bs3NGdZWopQFp6ahF1ZMbj"  style="color: #f7b500; text-decoration: none;">Bid now</a></p>
                                     </blockquote>
                                 <% } else {%>
                                     <blockquote class="blockquote wow fadeInUp" id="bid_now">

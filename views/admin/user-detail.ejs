@@ -82,7 +82,6 @@
                     <th>Item Owner</th>
                         <th>Item name</th>
                         <th>Initial Cost</th>
-                        <th>Bid Price</th>
                         <th>Status	</th>
                         <th>Paid</th>
                         <th>Auction Date</th>
@@ -97,11 +96,6 @@
                                 <td><%= item.owner %></td>
                                 <td><%= item.name %> </td>
                                 <td>£<%= item.cost %></td>
-                                <% if (item.Bid_price) { %>
-                                    <td>£<%= item.Bid_price %></td>
-                                <% }else { %>
-                                    <td>Nil</td>
-                                <% } %>
                                 <td><%= item.status %></td>
                                 <td><%= item.paid %></td>
                                 <% if (item.auctionDate) { %>
@@ -160,7 +154,6 @@
                     <th>Item Owner</th>
                         <th>Item name</th>
                         <th>Initial Cost</th>
-                        <th>Bid Price</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -172,11 +165,6 @@
                                 <td><%= item.owner %></td>
                                 <td><%= item.name %> </td>
                                 <td>£<%= item.cost %></td>
-                                <% if (item.Bid_price) { %>
-                                    <td>£<%= item.Bid_price %></td>
-                                <% }else { %>
-                                    <td>Nil</td>
-                                <% } %>
                                 <td>
                                 <div class="d-flex align-items-center">
                                     <a href="/admin/item/<%= item._id %>" type="button" class="btn btn-success btn-sm btn-icon-text mr-3">

@@ -86,7 +86,6 @@
                     <th class="ml-5">ItemID</th>
                     <th>Owner</th>
                     <th>Initial Cost</th>
-                    <th>Bid Price</th>
                     <th>Status</th>
                     <th>Paid</th>
                     <th>Sold</th>
@@ -101,11 +100,6 @@
                     <td>#<%= item.id %></td>
                     <td><%= item.owner %></td>
                     <td>£<%= item.cost %> </td>
-                    <% if (item.Bid_price) { %>
-                        <td>£<%= item.Bid_price %></td>
-                    <% }else { %>
-                        <td>Nil</td>
-                    <% } %>
                     <td><%= item.status %></td>
                     <td><%= item.paid %></td>
                     <td><%= item.sold %></td>
