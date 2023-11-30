@@ -16,7 +16,7 @@ const stripe = require('stripe')(stripeSecretkey);
 
 const getAllItemDetails = async (req, res) => {
     try {
-        const items = await Item.find({})   
+        const items = await Item.find({sold: false})   
 
         const list = []
         for (const item of items){
@@ -61,7 +61,7 @@ const getItemDetails = async (req, res) => {
     try {
         const {id} = req.params
 
-        const item = await Item.findOne({id: id})
+        const item = await Item.findOne({id: id,sold: false})
 
         if(!item){
             return res.json({
@@ -107,7 +107,7 @@ const setWinner = async (req, res) => {
         const {id} = req.params;
         const {password, winnerId, winner_email}  = req.body
 
-        const item = await Item.findOne({id: id})
+        const item = await Item.findOne({id: id, sold: false})
         if(!item){
             return res.json({
                 error: "Item not found"
@@ -139,7 +139,9 @@ const setWinner = async (req, res) => {
         item.winnerId = winnerId
         item.winnerEmail = winner_email
         item.winnerHoldId = winner_hold_id
+        item.sold = true
         await item.save()
+
 
         res.status(200).json({
             status: 200,
