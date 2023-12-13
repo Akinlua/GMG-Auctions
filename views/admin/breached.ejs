@@ -59,6 +59,18 @@
                                   </form>   
                             </div>
                             </td>
+                            <td>
+                              <a href="<%= item.owner_receipturl %>" target="_blank" type="button" class="btn btn-success btn-sm btn-icon-text mr-3">
+                                  receipt(owner)
+                                  <i class="typcn typcn-edit btn-icon-append"></i>                          
+                              </a>
+                          </td>
+                          <td>
+                            <a href="<%= item.winner_receipturl %>" target="_blank"  type="button" class="btn btn-success btn-sm btn-icon-text mr-3">
+                                receipt(winner)
+                                <i class="typcn typcn-edit btn-icon-append"></i>                          
+                            </a>
+                        </td>
                         </tr>
                     <% }) %>
 

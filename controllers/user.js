@@ -145,6 +145,11 @@ const postLogin = async (req, res) => {
         return res.render('login', {layout: noLayout, error})
     }
 
+    if(user.blocked == true){
+        error = "You cannot loggin. Contact Admin"
+        return res.render('login', {layout: noLayout, error})
+    }
+    
     const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_LIFETIME})
     res.cookie('token', token, {httpOnly: true})
 

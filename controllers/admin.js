@@ -158,6 +158,22 @@ const setDate = async (req, res) => {
     res.redirect(`/admin/item/${req.params.id}?message=${item.name} auction date has been set`)
 }
 
+const setSart_Bid = async (req, res) => {
+
+    const {cost} = req.body
+    if(!cost){
+        return res.render('admin/error-500',{layout: noLayout, name: "Not Found", message: "No Satrting Bid price Found", statusCode: 404})
+    }
+
+    const item = await Item.findOneAndUpdate({_id: req.params.id}, {cost: cost}, {new: true, runValidators: true})
+    if(!item){
+        return res.render('admin/error-404', {layout: noLayout})
+    }
+
+    res.redirect(`/admin/item/${req.params.id}?message=${item.name} Starting Bid Price updated`)
+}
+
+
 const accept = async (req, res) => {
 
     const item = await Item.findOne({_id: req.params.id})
@@ -247,6 +263,7 @@ const breached = async (req, res) => {
             const capturedCharge = await stripe.charges.capture(hold_id);
             if(capturedCharge){
                 item.chargId_holdId = capturedCharge.id
+                item.owner_receipturl = capturedCharge.receipt_url
                 await item.save()
             }
         }
@@ -257,6 +274,7 @@ const breached = async (req, res) => {
             const capturedCharge = await stripe.charges.capture(winner_hold_id);
             if(capturedCharge){
                 item.winner_chargId_holdId = capturedCharge.id
+                item.winner_receipturl = capturedCharge.receipt_url
                 await item.save()
             }
         }
@@ -345,10 +363,39 @@ const userDetails = async (req,res) => {
 
     res.render('admin/user-detail', {layout: adminLayout, user,user_, search, site: 'admin/all-users', message,Items, Items_won})
 }
+
+const blockUser = async (req, res) => {
+    const {id} = req.params
+
+    const user = await User.findById(id)
+    if(!user){
+        return res.render('admin/error-404', {layout: noLayout})
+    }
+
+    user.blocked = true
+    await user.save()
+
+    res.redirect(`/admin/all-users?message=${user.username} successfully blocked`)
+}
+
+const unblockUser = async (req, res) => {
+    const {id} = req.params
+
+    const user = await User.findById(id)
+    if(!user){
+        return res.render('admin/error-404', {layout: noLayout})
+    }
+
+    user.blocked = false
+    await user.save()
+
+    res.redirect(`/admin/all-users?message=${user.username} successfully Unblocked`)
+}
 module.exports = {
     allItems, breachedItems, soldItems,
     EachItem,setDate,
     accept, reject,
     breached, sold,unsold, unbreached,
-    deleteItemByAdmin, users, userDetails
+    deleteItemByAdmin, users, userDetails, 
+    setSart_Bid, blockUser, unblockUser
 }

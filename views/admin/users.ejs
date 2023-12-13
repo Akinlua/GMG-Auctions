@@ -7,6 +7,7 @@
             <div class="col-md-12">
             <h4>List of all Registered Users</h4>
     
+            <p style="color: green;"><%= message %></p>
               <div class="card">
     
                 <div class="table-responsive pt-3">
@@ -18,6 +19,7 @@
                         <th class="ml-5">UserID</th>
                         <th>Username</th>
                         <th>Email</th>
+                        <th>Blocked</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -27,11 +29,30 @@
                           <td>#<%= user.id %></td>
                           <td><%= user.username %></td>
                           <td><%= user.email %> </td>
+                          <td><%= user.blocked %></td>
                           <td>
                             <a href="/admin/user-detail/<%= user._id %>" type="button" class="btn btn-success btn-sm btn-icon-text mr-3">
                               View
                               <i class="typcn typcn-edit btn-icon-append"></i>                          
                               </a>
+                          </td>
+                          <td>
+                            <% if (user.blocked == false) { %>
+                              <form action="/admin/block-user/<%= user._id %>?_method=PATCH" method="post">
+                                <button type="submit" class="btn btn-danger btn-sm btn-icon-text mr-3">
+                                  Block
+                                  <i class="typcn typcn-delete-outline btn-icon-append"></i>                          
+                                </button>
+                              </form>  
+                            <% } else {%>
+                              <form action="/admin/unblock-user/<%= user._id %>?_method=PATCH" method="post">
+                                <button type="submit" class="btn btn-danger btn-sm btn-icon-text mr-3">
+                                  UnBlock
+                                  <i class="typcn typcn-delete-outline btn-icon-append"></i>                          
+                                </button>
+                              </form>  
+                            <% } %>
+                             
                           </td>
                         </tr>
     

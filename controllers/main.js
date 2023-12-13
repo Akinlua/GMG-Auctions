@@ -191,6 +191,7 @@ const bid = async (req, res) => {
             bider_email: user.email,
             biderId : user.id,
             bider_holdId : hold.id,
+            receipturl: hold.receipt_url
         }
 
         item.verified_Bidders.push(user_);

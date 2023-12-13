@@ -49,6 +49,10 @@ const UserSchema = new Schema({
   admin: {
     type: Boolean,
     default: false
+  },
+  blocked:{
+    type: Boolean,
+    default: false
   }
 
 });
