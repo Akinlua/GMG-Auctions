@@ -355,7 +355,7 @@ const userDetails = async (req,res) => {
     const Items = await Item.find({ownerId: user_._id})
 
     // items won
-    const Items_won = await Item.find({winnerId: user_._id})
+    const Items_won = await Item.find({winnerId: user_.id})
 
     let search = ''
     let message = ''
