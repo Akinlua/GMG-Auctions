@@ -46,7 +46,7 @@ const {
     createItem, readItems, readItems_User, EachItem, home,
     itemForm, search, EachItemGallery, charge, payPage, editItem,
     editItemPatch, about, postComment, new_createItem, new_editItemPatch, bidPage,
-    bid
+    bid, faq
 } = require('../controllers/main.js')
 
 router.get('/', home)
@@ -74,6 +74,7 @@ router.get('/editItem/:id', authMiddleware,notAdmin, editItem)
 router.patch('/editItem/:id', authMiddleware,notAdmin,upload, new_editItemPatch)//same
 
 router.get('/about', about)
+router.get('/faq', faq)
 
 // comment
 router.post('/post-comment/:id',authMiddleware, postComment)

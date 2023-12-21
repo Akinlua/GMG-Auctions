@@ -54,7 +54,7 @@ TikTok - https://www.tiktok.com/@gmgwatchesuk
     <div class="gmg-loader"></div>
     <header class="gmg-header">
         <nav class="navbar navbar-expand-lg navbar-light">
-            <a class="navbar-brand" href="/"><img src="../../images/logo.png" height="100px" alt="gmg Auction"></a>
+            <a class="navbar-brand" href="/"><img src="../../images/GMGLogo2.png" height="100px" alt="gmg Auction"></a>
             <ul class="nav nav-actions d-lg-none ml-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="#!" data-toggle="searchModal">
@@ -80,7 +80,7 @@ TikTok - https://www.tiktok.com/@gmgwatchesuk
             </button>
             <div class="collapse navbar-collapse" id="oleezMainNav">
                 <ul class="navbar-nav mx-auto mt-2 mt-lg-0">
-                    <% var activity1, activity2, activity3, activity4, activity5 = ''  %>
+                    <% var activity1, activity2, activity3, activity4, activity5, activity6 = ''  %>
                     <% if (title == 'Home') { %>
                      <% var activity1 = 'active' %>
                     <% } %>
@@ -104,7 +104,7 @@ TikTok - https://www.tiktok.com/@gmgwatchesuk
                     <% } %>
                     <% if (is_user == true) { %>
                         <% if (is_admin == false) { %>
-                            <li class="nav-item <%= activit4 %>">
+                            <li class="nav-item <%= activity4 %>">
                                 <a class="nav-link" href="/user-items">Dashboard</a>
                             </li>
                         <% } %>
@@ -117,6 +117,12 @@ TikTok - https://www.tiktok.com/@gmgwatchesuk
                             <a class="nav-link" href="/admin">Admin</a>
                         </li>
                     <% } %>
+                    <% if (title == 'FAQ') { %>
+                        <% var activity6 = 'active' %>
+                    <% } %>
+                    <li class="nav-item <%= activity6 %>">
+                        <a class="nav-link" href="/faq">FAQs</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav d-none d-lg-flex">
                     <li class="nav-item">

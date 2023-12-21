@@ -1015,6 +1015,18 @@ const postComment = async (req, res) => {
 
     res.redirect(`/item/${item._id}#comment`)
 }
+
+const faq = async (req, res) => {
+
+    const {is_user, is_admin} = await allPages(req, res)
+    res.render('main/faq',{
+        title: "FAQ",
+        description: "",
+        image_url: "",
+        is_user,
+        is_admin, stripePublickey
+    })
+}
 module.exports = {
     // createItem,
     readItems,
@@ -1031,5 +1043,5 @@ module.exports = {
     new_createItem,
     new_editItemPatch,
     url,
-    bidPage, bid
+    bidPage, bid, faq
 }
