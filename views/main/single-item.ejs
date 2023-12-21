@@ -30,17 +30,17 @@
                             <% if (user.admin == false) { %>
                                 <% if (user._id && bidded == true) { %>
                                     <blockquote class="blockquote wow fadeInUp" id="bid_now">
-                                            <p>Here's your user ID- <%= user.id %> you will need to make your bid here- <a href="https://wa.me/2347017125624/?text=!join%20<%=  item.id %>%20<%= user.id %>" target="_blank"  style="color: #f7b500; text-decoration: none;">Bid now</a></p>
+                                            <p>Here's your user ID- <%= user.id %> you will need to make your bid here- <a href="https://wa.me/2347017125624/?text=!join%20<%=  item.id %>%20<%= user.id %>" target="_blank"  style="color: #6DC36F; text-decoration: none;">Bid now</a></p>
                                     </blockquote>
                                 <% } else {%>
                                     <blockquote class="blockquote wow fadeInUp" id="bid_now">
-                                        <p>To Take part of the auction by biding, click on the link here - <a href="/bid/<%= item._id %>" style="color: #f7b500; text-decoration: none;">Bid</a>.</p>
+                                        <p>To Take part of the auction by biding, click on the link here - <a href="/bid/<%= item._id %>" style="color: #6DC36F; text-decoration: none;">Bid</a>.</p>
                                     </blockquote>
                                 <% } %>
                             <% } %>
                         <% } else { %>
                             <blockquote class="blockquote wow fadeInUp" id="bid_now">
-                                <p>To Take part of the auction by biding, click on the link here - <a href="/bid/<%= item._id %>" style="color: #f7b500; text-decoration: none;">Bid</a>.</p>
+                                <p>To Take part of the auction by biding, click on the link here - <a href="/bid/<%= item._id %>" style="color: #6DC36F; text-decoration: none;">Bid</a>.</p>
                             </blockquote>
 
                         <% } %>
